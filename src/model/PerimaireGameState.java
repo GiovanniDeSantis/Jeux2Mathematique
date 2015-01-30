@@ -1,21 +1,24 @@
 package model;
 
-import controller.Action;
-
 public class PerimaireGameState extends GameState {
 	private static final int NUMBER_OF_CARDS = 24;
 	
 	public PerimaireGameState() {
-		super();
-		this.board = new PerimaireTable();
+
 	}
 	
 	@Override
-	public void startGame() {
-		this.distributeCards();
-		this.setPlayingOrder();
+	public String[] createGame (int numberOfPlayers) {
+		// creates the players
+		// creates new deck
+		// shuffles the deck
+		// defines the playing order
+		// gives the cards
+		String[] testDeck = {"1", "2", "3", "4"};
+		return testDeck;
 	}
 
+	/*
 	private void distributeCards(){
 		for (Team team: this.teams){
 			for (String playerName: team.getPlayersNames()){
@@ -39,5 +42,5 @@ public class PerimaireGameState extends GameState {
 	@Override
 	public void updateGameState(Action movement) {
 		// TODO Auto-generated method stub
-	}
+	}*/
 }

@@ -20,7 +20,7 @@ public class Application extends JFrame {
 	 */
 	public void init () {
 		/* Frame handling */
-		setSize(1000, 650);
+		setSize(1000, 670);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);

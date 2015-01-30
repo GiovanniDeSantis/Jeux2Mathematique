@@ -1,8 +1,6 @@
 package view;
 
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -10,39 +8,36 @@ import javax.swing.JButton;
 public class CardGUI extends JButton {
 
 	private static final long serialVersionUID = 1L;
-	private Image image;
-
+	private String source;
+	
     /**
      * Class constructor.
      * @param source - source path of the background image of the CardGUI.
      */
     public CardGUI (String source) {
-    	super();
-    	init(source);
+    	this.source = source;
+    	ImageIcon imageIcon = new ImageIcon(source);
+    	setIcon(imageIcon);
+    	int width = imageIcon.getIconWidth();
+    	int height = imageIcon.getIconHeight();
+    	this.setBorderPainted(false);
+    	setContentAreaFilled(false);
+    	setPreferredSize(new Dimension(width, height));
     }
     
     /**
-     * Initializes the CardGUI.
-     * @param source - source path of the background image of the CardGUI.
+     * 
+     * @return
      */
-    private void init (String source) {
-    	int width, height;
-    	ImageIcon imageIcon;
-    	
-    	imageIcon = new ImageIcon(source);
-        image = imageIcon.getImage();
-        width = image.getWidth(this);
-        height =  image.getHeight(this);
-        setContentAreaFilled(false);
-        setPreferredSize(new Dimension(width, height));
+    public String getSource () {
+    	return source;
     }
     
-    @Override
     /**
-     * Paints the CardGUI.
+     * 
      */
-    public void paintComponent(Graphics g) {
-        g.drawImage(image, 0, 0, null);
+    public void makeTransparent () {
+    	setIcon(null);
     }
 
 }

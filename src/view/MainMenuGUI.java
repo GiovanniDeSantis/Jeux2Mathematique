@@ -136,11 +136,11 @@ public class MainMenuGUI extends JPanel {
 			BoardGameGUI boardGame;
 			
 			switch(numberOfPlayers) {
-				case 2: boardGame = new BoardGameGUI2Players(playersNames);
+				case 2: boardGame = new BoardGameGUI2PlayersPerimaire(playersNames);
 						break;
-				case 3: boardGame = new BoardGameGUI3Players(playersNames);
+				case 3: boardGame = new BoardGameGUI3PlayersPerimaire(playersNames);
 						break;
-				case 4: boardGame = new BoardGameGUI4Players(playersNames);
+				case 4: boardGame = new BoardGameGUI4PlayersPerimaire(playersNames);
 						break;
 				default: boardGame = new BoardGameGUI();
 						 break;

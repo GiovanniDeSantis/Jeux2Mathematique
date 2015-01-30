@@ -1,21 +1,19 @@
 package model;
 
-import controller.Action;
-
 public class PerimexpaireGameState extends GameState {
+	
 	private static final int NUMBER_CARDS_PLAYER = 4;
 	
 	public PerimexpaireGameState() {
-		super();
-		this.board = new PerimexpaireTable();
+		
 	}
 
 	@Override
-	public void startGame() {
-		this.distributeCards();
-		this.setPlayingOrder();
+	public void createGame() {
+		
 	}
 	
+	/*
 	private void distributeCards() {
 		for (Team team: this.teams){
 			for (String playerName: team.getPlayersNames()){
@@ -30,5 +28,5 @@ public class PerimexpaireGameState extends GameState {
 	@Override
 	public void updateGameState(Action movement) {
 		// TODO Auto-generated method stub	
-	}
+	}*/
 }
