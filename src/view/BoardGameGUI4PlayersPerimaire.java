@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 /**
  * Class that implements the User Interface of the game board in the
- * case there are three players.
+ * case there are four players.
  * @author Giovanni De Santis, Rafael Garcia.
  */
 public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
@@ -26,9 +26,9 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 	private final int deckDimension = 24;
 
 	private static final long serialVersionUID = 1L;
-	private JPanel firstPlayerPanel, secondPlayerPanel, thirdPlayerPanel, centerPanel;
-	private JPanel firstPlayerCardPanel, secondPlayerCardPanel, thirdPlayerCardPanel;
-	private JLabel firstPlayerLabel, secondPlayerLabel, thirdPlayerLabel;
+	private JPanel firstPlayerPanel, secondPlayerPanel, thirdPlayerPanel, fourthPlayerPanel, centerPanel;
+	private JPanel firstPlayerCardPanel, secondPlayerCardPanel, thirdPlayerCardPanel, fourthPlayerCardPanel;
+	private JLabel firstPlayerLabel, secondPlayerLabel, thirdPlayerLabel, fourthPlayerLabel;
 	private List<CardGUI> deck;
 	
 	/**
@@ -41,13 +41,16 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 		firstPlayerLabel = new JLabel("Jeu de " + playersNames[0]);
 		secondPlayerLabel = new JLabel("Jeu de " + playersNames[1]);
 		thirdPlayerLabel = new JLabel("Jeu de " + playersNames[2]);
+		fourthPlayerLabel = new JLabel("Jeu de " + playersNames[3]);
 		/* Panels Creation */
 		firstPlayerCardPanel = new JPanel(new GridBagLayout());
 		secondPlayerCardPanel = new JPanel(new GridBagLayout());
 		thirdPlayerCardPanel = new JPanel(new GridBagLayout());
+		fourthPlayerCardPanel = new JPanel(new GridBagLayout());
 		firstPlayerPanel = new JPanel();
 		secondPlayerPanel = new JPanel();
 		thirdPlayerPanel = new JPanel();
+		fourthPlayerPanel = new JPanel();
 		centerPanel = new JPanel(new GridBagLayout());
 		/* Cards Creation */
 		//TODO To generalize and modify.
@@ -61,39 +64,49 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 	@Override
 	protected void init () {
 		/* First Player Label Handling */
-		firstPlayerLabel.setPreferredSize(new Dimension(400,20));
+		firstPlayerLabel.setPreferredSize(new Dimension(370,20));
 		firstPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* Second Player Label Handling */
-		secondPlayerLabel.setPreferredSize(new Dimension(400,20));
+		secondPlayerLabel.setPreferredSize(new Dimension(1000,20));
 		secondPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* Third Player Label Handling */
-		thirdPlayerLabel.setPreferredSize(new Dimension(1000,20));
+		thirdPlayerLabel.setPreferredSize(new Dimension(370,20));
 		thirdPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
+		/* Fourth Player Label Handling */
+		fourthPlayerLabel.setPreferredSize(new Dimension(1000,20));
+		fourthPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* First Player Card Panel Handling */
 		configurePlayerCardPanel(firstPlayerCardPanel);
 		/* Second Player Card Panel Handling */
 		configurePlayerCardPanel(secondPlayerCardPanel);
 		/* Third Player Card Panel Handling */
 		configurePlayerCardPanel(thirdPlayerCardPanel);
+		/* Fourth Player Card Panel Handling */
+		configurePlayerCardPanel(fourthPlayerCardPanel);
 		/* First Player Panel Handling */
-		firstPlayerPanel.setPreferredSize(new Dimension(400, 360));
+		firstPlayerPanel.setPreferredSize(new Dimension(370, 325));
 		firstPlayerPanel.add(firstPlayerLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
-		/* Center Panel Handling */
-		centerPanel.setPreferredSize(new Dimension(200, 360));
 		/* Second Player Panel Handling */
-		secondPlayerPanel.setPreferredSize(new Dimension(400, 360));
+		secondPlayerPanel.setPreferredSize(new Dimension(1000, 170));
 		secondPlayerPanel.add(secondPlayerLabel);
 		secondPlayerPanel.add(secondPlayerCardPanel);
 		/* Third Player Panel Handling */
-		thirdPlayerPanel.setPreferredSize(new Dimension(1000, 255));
+		thirdPlayerPanel.setPreferredSize(new Dimension(370, 325));
 		thirdPlayerPanel.add(thirdPlayerLabel);
 		thirdPlayerPanel.add(thirdPlayerCardPanel);
+		/* Fourth Player Panel Handling */
+		fourthPlayerPanel.setPreferredSize(new Dimension(1000, 170));
+		fourthPlayerPanel.add(fourthPlayerLabel);
+		fourthPlayerPanel.add(fourthPlayerCardPanel);
+		/* Center Panel Handling */
+		centerPanel.setPreferredSize(new Dimension(200, 325));
 		/* Board Panel Handling */
 		add(firstPlayerPanel, BorderLayout.WEST);
+		add(secondPlayerPanel, BorderLayout.NORTH);
+		add(thirdPlayerPanel, BorderLayout.EAST);
+		add(fourthPlayerPanel, BorderLayout.SOUTH);
 		add(centerPanel, BorderLayout.CENTER);
-		add(secondPlayerPanel, BorderLayout.EAST);
-		add(thirdPlayerPanel, BorderLayout.NORTH);
 	}
 	
 	/**
@@ -105,54 +118,46 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 		
 		/* Setting the preferred size of the playerCardPanel */
 		if (playerCardPanel == firstPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(375, 325));
+			playerCardPanel.setPreferredSize(new Dimension(345, 320));
 		if (playerCardPanel == secondPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(375, 325));
+			playerCardPanel.setPreferredSize(new Dimension(900, 135));
 		if (playerCardPanel == thirdPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(900, 220));
+			playerCardPanel.setPreferredSize(new Dimension(345, 320));
+		if (playerCardPanel == fourthPlayerCardPanel)
+			playerCardPanel.setPreferredSize(new Dimension(900, 135));
 		/* Positioning of the cards of the deck in the playerCardPanel */
 		CardGUI card = null;
 		GridBagConstraints constraints = new GridBagConstraints();
 		/* firstPlayerCardPanel */
 		if (playerCardPanel == firstPlayerCardPanel) {
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 2; i++) {
 				for (int j = 0; j < 3; j++) {
-					if (((i + j) + (i * 2)) != 8) {
 						card = deck.get((i + j) + (i * 2));
-						System.out.println("first: " + ((i + j) + (i * 2)));
 						card.addActionListener(new PlayerCardGUIListener());
 						constraints.gridx = j;
 						constraints.gridy = i;
 						constraints.ipadx = 13;
 						constraints.ipady = 10;
 						playerCardPanel.add(card, constraints);
-					}
 				}
 			}
 		}
 		/* secondPlayerCardPanel */
 		if (playerCardPanel == secondPlayerCardPanel) {
-			for (int i = 0; i < 3; i++) {
-				for (int j = 0; j < 3; j++) {
-					if (((deckDimension/3) + (i + j) + (i * 2)) != 16) {
-						card = deck.get((deckDimension/3) + (i + j) + (i * 2));
-						System.out.println("second: " + ((deckDimension/3) + (i + j) + (i * 2)));
+			for (int i = 0; i < 6; i++) {
+						card = deck.get((deckDimension/4) + i);
 						card.addActionListener(new PlayerCardGUIListener());
-						constraints.gridx = j;
-						constraints.gridy = i;
+						constraints.gridx = i;
 						constraints.ipadx = 13;
 						constraints.ipady = 10;
 						playerCardPanel.add(card, constraints);
-					}
-				}
 			}
 		}
 		/* thirdPlayerCardPanel */
 		if (playerCardPanel == thirdPlayerCardPanel) {
 			for (int i = 0; i < 2; i++) {
-				for (int j = 0; j < 4; j++) {
-					card = deck.get(((deckDimension/3) * 2) + (i + j) + (i * 3));
-					System.out.println("third: " + (((deckDimension/3) * 2) + (i + j) + (i * 3)));
+				for (int j = 0; j < 3; j++) {
+					card = deck.get(((deckDimension/4) * 2) + (i + j) + (i * 2));
 					card.addActionListener(new PlayerCardGUIListener());
 					constraints.gridx = j;
 					constraints.gridy = i;
@@ -160,6 +165,17 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 					constraints.ipady = 10;
 					playerCardPanel.add(card, constraints);
 				}
+			}
+		}
+		/* fourthPlayerCardPanel */
+		if (playerCardPanel == fourthPlayerCardPanel) {
+			for (int i = 0; i < 6; i++) {
+					card = deck.get(((deckDimension/4) * 3) + i);
+					card.addActionListener(new PlayerCardGUIListener());
+					constraints.gridx = i;
+					constraints.ipadx = 13;
+					constraints.ipady = 10;
+					playerCardPanel.add(card, constraints);
 			}
 		}
 	}

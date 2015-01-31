@@ -79,8 +79,6 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		firstPlayerPanel.setPreferredSize(new Dimension(400, 360));
 		firstPlayerPanel.add(firstPlayerLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
-		/* Center Panel Handling */
-		centerPanel.setPreferredSize(new Dimension(200, 360));
 		/* Second Player Panel Handling */
 		secondPlayerPanel.setPreferredSize(new Dimension(400, 360));
 		secondPlayerPanel.add(secondPlayerLabel);
@@ -89,11 +87,13 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		thirdPlayerPanel.setPreferredSize(new Dimension(1000, 255));
 		thirdPlayerPanel.add(thirdPlayerLabel);
 		thirdPlayerPanel.add(thirdPlayerCardPanel);
+		/* Center Panel Handling */
+		centerPanel.setPreferredSize(new Dimension(200, 360));
 		/* Board Panel Handling */
 		add(firstPlayerPanel, BorderLayout.WEST);
-		add(centerPanel, BorderLayout.CENTER);
 		add(secondPlayerPanel, BorderLayout.EAST);
 		add(thirdPlayerPanel, BorderLayout.NORTH);
+		add(centerPanel, BorderLayout.CENTER);
 	}
 	
 	/**
