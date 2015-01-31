@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -50,7 +48,7 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		firstPlayerPanel = new JPanel();
 		secondPlayerPanel = new JPanel();
 		thirdPlayerPanel = new JPanel();
-		centerPanel = new JPanel();
+		centerPanel = new JPanel(new GridBagLayout());
 		/* Cards Creation */
 		//TODO To generalize and modify.
 		deck = new ArrayList<>(deckDimension);
@@ -63,17 +61,14 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 	@Override
 	protected void init () {
 		/* First Player Label Handling */
-		firstPlayerLabel.setPreferredSize(new Dimension(350,20));
+		firstPlayerLabel.setPreferredSize(new Dimension(400,20));
 		firstPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
-		firstPlayerLabel.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
 		/* Second Player Label Handling */
-		secondPlayerLabel.setPreferredSize(new Dimension(100,20));
+		secondPlayerLabel.setPreferredSize(new Dimension(400,20));
 		secondPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
-		secondPlayerLabel.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
 		/* Third Player Label Handling */
-		thirdPlayerLabel.setPreferredSize(new Dimension(900,20));
+		thirdPlayerLabel.setPreferredSize(new Dimension(1000,20));
 		thirdPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
-		thirdPlayerLabel.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
 		/* First Player Card Panel Handling */
 		configurePlayerCardPanel(firstPlayerCardPanel);
 		/* Second Player Card Panel Handling */
@@ -81,21 +76,17 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		/* Third Player Card Panel Handling */
 		configurePlayerCardPanel(thirdPlayerCardPanel);
 		/* First Player Panel Handling */
-		firstPlayerPanel.setPreferredSize(new Dimension(375, 425));
-		firstPlayerPanel.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
+		firstPlayerPanel.setPreferredSize(new Dimension(400, 360));
 		firstPlayerPanel.add(firstPlayerLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
 		/* Center Panel Handling */
-		centerPanel.setPreferredSize(new Dimension(150, 640));
-		centerPanel.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
+		centerPanel.setPreferredSize(new Dimension(200, 360));
 		/* Second Player Panel Handling */
-		secondPlayerPanel.setPreferredSize(new Dimension(375, 400));
-		secondPlayerPanel.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
+		secondPlayerPanel.setPreferredSize(new Dimension(400, 360));
 		secondPlayerPanel.add(secondPlayerLabel);
 		secondPlayerPanel.add(secondPlayerCardPanel);
 		/* Third Player Panel Handling */
-		thirdPlayerPanel.setPreferredSize(new Dimension(900, 215));
-		thirdPlayerPanel.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
+		thirdPlayerPanel.setPreferredSize(new Dimension(1000, 255));
 		thirdPlayerPanel.add(thirdPlayerLabel);
 		thirdPlayerPanel.add(thirdPlayerCardPanel);
 		/* Board Panel Handling */
@@ -114,53 +105,56 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		
 		/* Setting the preferred size of the playerCardPanel */
 		if (playerCardPanel == firstPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(375, 400));
+			playerCardPanel.setPreferredSize(new Dimension(375, 325));
 		if (playerCardPanel == secondPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(375, 400));
+			playerCardPanel.setPreferredSize(new Dimension(375, 325));
 		if (playerCardPanel == thirdPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(900, 215));
-		playerCardPanel.setBorder(BorderFactory.createDashedBorder(Color.BLACK));
+			playerCardPanel.setPreferredSize(new Dimension(900, 220));
 		/* Positioning of the cards of the deck in the playerCardPanel */
 		CardGUI card = null;
 		GridBagConstraints constraints = new GridBagConstraints();
 		/* firstPlayerCardPanel */
 		if (playerCardPanel == firstPlayerCardPanel) {
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 2; j++) {
-					card = deck.get((i + j) + i);
-					card.addActionListener(new PlayerCardGUIListener());
-					constraints.gridx = j;
-					constraints.gridy = i;
-					constraints.ipadx = 15;
-					constraints.ipady = 15;
-					playerCardPanel.add(card, constraints);
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					if (((i + j) + (i * 2)) != 8) {
+						card = deck.get((i + j) + (i * 2));
+						card.addActionListener(new PlayerCardGUIListener());
+						constraints.gridx = j;
+						constraints.gridy = i;
+						constraints.ipadx = 13;
+						constraints.ipady = 10;
+						playerCardPanel.add(card, constraints);
+					}
 				}
 			}
 		}
 		/* secondPlayerCardPanel */
 		if (playerCardPanel == secondPlayerCardPanel) {
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 2; j++) {
-					card = deck.get((deckDimension/3) + (i + j) + i);
-					card.addActionListener(new PlayerCardGUIListener());
-					constraints.gridx = j;
-					constraints.gridy = i;
-					constraints.ipadx = 15;
-					constraints.ipady = 15;
-					playerCardPanel.add(card, constraints);
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					if (((deckDimension/3) + (i + j) + (i * 2)) != 16) {
+						card = deck.get((deckDimension/3) + (i + j) + (i * 2));
+						card.addActionListener(new PlayerCardGUIListener());
+						constraints.gridx = j;
+						constraints.gridy = i;
+						constraints.ipadx = 13;
+						constraints.ipady = 10;
+						playerCardPanel.add(card, constraints);
+					}
 				}
 			}
 		}
 		/* thirdPlayerCardPanel */
-		else {
+		if (playerCardPanel == thirdPlayerCardPanel) {
 			for (int i = 0; i < 2; i++) {
 				for (int j = 0; j < 4; j++) {
 					card = deck.get(((deckDimension/3) * 2) + (i + j) + (i * 3));
 					card.addActionListener(new PlayerCardGUIListener());
 					constraints.gridx = j;
 					constraints.gridy = i;
-					constraints.ipadx = 15;
-					constraints.ipady = 15;
+					constraints.ipadx = 13;
+					constraints.ipady = 10;
 					playerCardPanel.add(card, constraints);
 				}
 			}

@@ -56,23 +56,23 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	@Override
 	protected void init () {
 		/* First Player Label Handling */
-		firstPlayerLabel.setPreferredSize(new Dimension(355,20));
+		firstPlayerLabel.setPreferredSize(new Dimension(300,20));
 		firstPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* Second Player Label Handling */
-		secondPlayerLabel.setPreferredSize(new Dimension(355,20));
+		secondPlayerLabel.setPreferredSize(new Dimension(300,20));
 		secondPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* First Player Card Panel Handling */
 		configurePlayerCardPanel(firstPlayerCardPanel);
 		/* Second Player Card Panel Handling */
 		configurePlayerCardPanel(secondPlayerCardPanel);
 		/* First Player Panel Handling */
-		firstPlayerPanel.setPreferredSize(new Dimension(355, 640));
+		firstPlayerPanel.setPreferredSize(new Dimension(300, 520));
 		firstPlayerPanel.add(firstPlayerLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
 		/* Center Panel Handling */
-		centerPanel.setPreferredSize(new Dimension(260, 640));
+		centerPanel.setPreferredSize(new Dimension(260, 520));
 		/* Second Player Panel Handling */
-		secondPlayerPanel.setPreferredSize(new Dimension(355, 640));
+		secondPlayerPanel.setPreferredSize(new Dimension(300, 520));
 		secondPlayerPanel.add(secondPlayerLabel);
 		secondPlayerPanel.add(secondPlayerCardPanel);
 		/* Board Panel Handling */
@@ -87,7 +87,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	 * @param playerCardPanel - the panel in which the cards must be positioned.
 	 */
 	private void configurePlayerCardPanel (JPanel playerCardPanel) {
-		playerCardPanel.setPreferredSize(new Dimension(355, 600));
+		playerCardPanel.setPreferredSize(new Dimension(300, 500));
 		/* Positioning of the cards of the deck in the playerCardPanel */
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 3; j++) {

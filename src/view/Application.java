@@ -1,35 +1,47 @@
 package view;
 
+import java.awt.CardLayout;
+
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class Application extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private MainMenuGUI mainMenu;
+	final static String MAINMENU = "Main Menu";
+	final static String BOARDGAME = "Board Game";
+	private JPanel cardsContainer, mainMenu;
 	
 	/**
 	 * Class constructor.
 	 */
 	public Application () {
 		super();
-		mainMenu = new MainMenuGUI(this);
+		/* Cards Container Creation */
+		cardsContainer = new JPanel(new CardLayout());
+		/* Cards Creation */
+		mainMenu = new MainMenuGUI(this, cardsContainer);
 	}
 	
 	/**
 	 * Initializes the application frame.
 	 */
 	public void init () {
-		/* Frame handling */
-		setSize(1000, 670);
+		/* Cards Container Handling */
+		cardsContainer.add(mainMenu, MAINMENU);
+		/* Frame Handling */
+		setSize(400, 400);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		add(mainMenu);
+		add(cardsContainer);
 		setVisible(true);
 	}
 	
+	/**
+	 * Main function.
+	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Application application = new Application();
 		application.init();
 	}

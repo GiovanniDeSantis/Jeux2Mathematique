@@ -20,7 +20,7 @@ public class CardGUI extends JButton {
     	setIcon(imageIcon);
     	int width = imageIcon.getIconWidth();
     	int height = imageIcon.getIconHeight();
-    	this.setBorderPainted(false);
+    	setBorderPainted(false);
     	setContentAreaFilled(false);
     	setPreferredSize(new Dimension(width, height));
     }

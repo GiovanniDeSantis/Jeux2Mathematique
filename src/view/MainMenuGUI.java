@@ -1,32 +1,38 @@
 package view;
 
-import java.awt.Component;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 public class MainMenuGUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private Application application;
-	private Border newGameBorder, buttonsBorder;
-	private JButton newGameButton, exitButton, optionsButton;
+	private Container fatherContainer;
+	private JPanel newGamePanel, optionsPanel, exitPanel;
+	private JButton newGameButton, optionsButton, exitButton;
 
 	/**
 	 * Class constructor.
-	 * @param application - The reference JFrame in which the MainMenuGUI
-	 * 						will be placed.
+	 * @param application - The container in which the MainMenuGUI is placed.
 	 */
-	public MainMenuGUI (Application application) {
+	public MainMenuGUI (Application application, Container fatherContainer) {
 		super();
-		/* Reference Frame initialization */
+		/* Father Container Initialization */
 		this.application = application;
+		this.fatherContainer = fatherContainer;
+		/* Panels Creation */
+		newGamePanel = new JPanel(new BorderLayout());
+		optionsPanel = new JPanel(new BorderLayout());
+		exitPanel = new JPanel(new BorderLayout());
 		/* Buttons Creation */
 		newGameButton = new JButton("New Game");
 		optionsButton = new JButton("Options");
@@ -39,33 +45,35 @@ public class MainMenuGUI extends JPanel {
 	 * Initializes the MainMenuGUI.
 	 */
 	private void init () {
-		/* Panel Handling */
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(newGameButton);
-		add(optionsButton);
-		add(exitButton);
-		/* Border Handling */
-		newGameBorder = BorderFactory.createEmptyBorder(100, 0, 0, 0);
-		buttonsBorder = BorderFactory.createEmptyBorder(50, 0, 0, 0);
-		/* Buttons Handling */
 		/* New Game Button Handling */
-		newGameButton.setSize(800, 100);
-		newGameButton.setBorder(newGameBorder);
+		newGameButton.setPreferredSize(new Dimension(400, 100));
 		newGameButton.setContentAreaFilled(false);
-		newGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		newGameButton.setBorderPainted(false);
 		newGameButton.addActionListener(new NewGameListener());
 		/* Options Button Handling */
-		optionsButton.setSize(800, 100);
-		optionsButton.setBorder(buttonsBorder);
+		optionsButton.setPreferredSize(new Dimension(400, 100));
 		optionsButton.setContentAreaFilled(false);
-		optionsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		optionsButton.setBorderPainted(false);
 		optionsButton.addActionListener(new OptionsListener());
 		/* Exit Button Handling */
-		exitButton.setSize(800, 100);
-		exitButton.setBorder(buttonsBorder);
+		exitButton.setPreferredSize(new Dimension(400, 100));
 		exitButton.setContentAreaFilled(false);
-		exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		exitButton.setBorderPainted(false);
 		exitButton.addActionListener(new ExitListener());
+		/* New Game Panel Handling */
+		newGamePanel.setPreferredSize(new Dimension(400, 150));
+		newGamePanel.add(newGameButton, BorderLayout.SOUTH);
+		/* Options Panel Handling */
+		optionsPanel.setPreferredSize(new Dimension(400, 100));
+		optionsPanel.add(optionsButton, BorderLayout.CENTER);
+		/* Exit Panel Handling */
+		exitPanel.setPreferredSize(new Dimension(400, 150));
+		exitPanel.add(exitButton, BorderLayout.NORTH);
+		/* Main Menu Handling */
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		add(newGamePanel);
+		add(optionsPanel);
+		add(exitPanel);
 	}
 	
     /* ------------------------------------ "New Game" Button Action Listener --------------------------------------- */
@@ -78,15 +86,21 @@ public class MainMenuGUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent action) {
 			BoardGameGUI boardGame;
+			CardLayout cardLayout;
 			int numberOfPlayers;
 			String[] playersNames;
 			
+			/* Initialization of the game */
 			numberOfPlayers = getNumberOfPlayers();
 			playersNames = getPlayersNames(numberOfPlayers);
 			boardGame = boardGameGUIInitialization(numberOfPlayers, playersNames);
-			application.add(boardGame);
-			setVisible(false);
-			boardGame.setVisible(true);
+			/* Adding of the board game to the CardLayout */
+			fatherContainer.add(boardGame, Application.BOARDGAME);
+			cardLayout = (CardLayout)fatherContainer.getLayout();
+			cardLayout.show(fatherContainer, Application.BOARDGAME);
+			/* Reshaping of the main frame */
+			application.pack();
+			application.setLocationRelativeTo(null);			
 		}
 		
 		/**
@@ -96,7 +110,7 @@ public class MainMenuGUI extends JPanel {
 			int numberOfPlayers;
 			String[] possibleValues = { "2", "3", "4" };
 			
-			numberOfPlayers = Integer.parseInt((String)JOptionPane.showInputDialog(application, 
+			numberOfPlayers = Integer.parseInt((String)JOptionPane.showInputDialog(fatherContainer, 
 																		   "Combien de joueurs vont jouer?", 
 																		   "Nombre de joueurs", 
 																		   JOptionPane.QUESTION_MESSAGE,
@@ -116,7 +130,7 @@ public class MainMenuGUI extends JPanel {
 			String[] playersNames = new String[numberOfPlayers];
 			
 			for (int i = 0; i < numberOfPlayers; i++) {
-				playersNames[i] = (String)JOptionPane.showInputDialog(application,
+				playersNames[i] = (String)JOptionPane.showInputDialog(fatherContainer,
 																 "Quel est le prenom du joueur numéro " + (i + 1),
 																 "Prenom des joueurs",
 																 JOptionPane.QUESTION_MESSAGE);
