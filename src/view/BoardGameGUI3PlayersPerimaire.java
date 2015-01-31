@@ -2,7 +2,6 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -80,19 +78,19 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		firstPlayerPanel.add(firstPlayerLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
 		/* Second Player Panel Handling */
-		secondPlayerPanel.setPreferredSize(new Dimension(400, 360));
+		secondPlayerPanel.setPreferredSize(new Dimension(1000, 255));
 		secondPlayerPanel.add(secondPlayerLabel);
 		secondPlayerPanel.add(secondPlayerCardPanel);
 		/* Third Player Panel Handling */
-		thirdPlayerPanel.setPreferredSize(new Dimension(1000, 255));
+		thirdPlayerPanel.setPreferredSize(new Dimension(400, 360));
 		thirdPlayerPanel.add(thirdPlayerLabel);
 		thirdPlayerPanel.add(thirdPlayerCardPanel);
 		/* Center Panel Handling */
 		centerPanel.setPreferredSize(new Dimension(200, 360));
 		/* Board Panel Handling */
 		add(firstPlayerPanel, BorderLayout.WEST);
-		add(secondPlayerPanel, BorderLayout.EAST);
-		add(thirdPlayerPanel, BorderLayout.NORTH);
+		add(secondPlayerPanel, BorderLayout.NORTH);
+		add(thirdPlayerPanel, BorderLayout.EAST);
 		add(centerPanel, BorderLayout.CENTER);
 	}
 	
@@ -107,9 +105,9 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		if (playerCardPanel == firstPlayerCardPanel)
 			playerCardPanel.setPreferredSize(new Dimension(375, 325));
 		if (playerCardPanel == secondPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(375, 325));
-		if (playerCardPanel == thirdPlayerCardPanel)
 			playerCardPanel.setPreferredSize(new Dimension(900, 220));
+		if (playerCardPanel == thirdPlayerCardPanel)
+			playerCardPanel.setPreferredSize(new Dimension(375, 325));
 		/* Positioning of the cards of the deck in the playerCardPanel */
 		CardGUI card = null;
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -131,10 +129,24 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		}
 		/* secondPlayerCardPanel */
 		if (playerCardPanel == secondPlayerCardPanel) {
+			for (int i = 0; i < 2; i++) {
+				for (int j = 0; j < 4; j++) {
+					card = deck.get((deckDimension/3) + (i + j) + (i * 3));
+					card.addActionListener(new PlayerCardGUIListener());
+					constraints.gridx = j;
+					constraints.gridy = i;
+					constraints.ipadx = 13;
+					constraints.ipady = 10;
+					playerCardPanel.add(card, constraints);
+				}
+			}
+		}
+		/* thirdPlayerCardPanel */
+		if (playerCardPanel == thirdPlayerCardPanel) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					if (((deckDimension/3) + (i + j) + (i * 2)) != 16) {
-						card = deck.get((deckDimension/3) + (i + j) + (i * 2));
+					if ((((deckDimension/3) * 2) + (i + j) + (i * 2)) != 24) {
+						card = deck.get(((deckDimension/3) * 2) + (i + j) + (i * 2));
 						card.addActionListener(new PlayerCardGUIListener());
 						constraints.gridx = j;
 						constraints.gridy = i;
@@ -145,58 +157,6 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 				}
 			}
 		}
-		/* thirdPlayerCardPanel */
-		if (playerCardPanel == thirdPlayerCardPanel) {
-			for (int i = 0; i < 2; i++) {
-				for (int j = 0; j < 4; j++) {
-					card = deck.get(((deckDimension/3) * 2) + (i + j) + (i * 3));
-					card.addActionListener(new PlayerCardGUIListener());
-					constraints.gridx = j;
-					constraints.gridy = i;
-					constraints.ipadx = 13;
-					constraints.ipady = 10;
-					playerCardPanel.add(card, constraints);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Positions the card played at each move in the appropriate panel.
-	 * @param referencePanel - the panel in which the played card must be placed.
-	 * @param action - the event occurred on the played card.
-	 */
-	private void playedCardPositioning (Container referencePanel, ActionEvent action) {
-		/* Retrieval of the card on which the event occurred */
-		CardGUI sourceComponent = (CardGUI)action.getSource();
-		/* The card on which the event has occurred is made transparent */
-		sourceComponent.makeTransparent();
-		/* Addition of the card to the panel in which are positioned the played cards */
-		CardGUI playedCard = new CardGUI(sourceComponent.getSource());
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridx = 3;
-		constraints.gridy = 2;
-		int numberComponents = centerPanel.getComponentCount();
-		if (numberComponents >= 1) {
-			int dx = randInt(-80, 80);
-			int dy = randInt(-80, 80);
-			constraints.insets.left = dx;
-			constraints.insets.top = dy;
-		}
-		centerPanel.add(playedCard, constraints, 0);
-	}
-	
-	/**
-	 * Computes a random integer in a generic interval.
-	 * @param min - the minimum value of the generic interval.
-	 * @param max - the maximum value of the generic interval.
-	 * @return a random integer in the interval [min, max].
-	 */
-	private int randInt (int min, int max) {
-		Random random = new Random();
-	    int randomNumber = random.nextInt((max - min) + 1) + min;
-
-	    return randomNumber;
 	}
 
     /* ------------------------------------ First Player CardGUI Action Listener -------------------------------- */
@@ -209,7 +169,7 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		public void actionPerformed(ActionEvent action) {
 			Component component = (Component)action.getSource();
 			component.setEnabled(false);
-			playedCardPositioning(component.getParent(), action);
+			playedCardPositioning(centerPanel, action);
 		}
 
 	}

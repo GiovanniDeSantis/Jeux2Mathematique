@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -9,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -66,13 +64,13 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		/* Second Player Card Panel Handling */
 		configurePlayerCardPanel(secondPlayerCardPanel);
 		/* First Player Panel Handling */
-		firstPlayerPanel.setPreferredSize(new Dimension(300, 520));
+		firstPlayerPanel.setPreferredSize(new Dimension(300, 490));
 		firstPlayerPanel.add(firstPlayerLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
 		/* Center Panel Handling */
-		centerPanel.setPreferredSize(new Dimension(260, 520));
+		centerPanel.setPreferredSize(new Dimension(260, 490));
 		/* Second Player Panel Handling */
-		secondPlayerPanel.setPreferredSize(new Dimension(300, 520));
+		secondPlayerPanel.setPreferredSize(new Dimension(300, 490));
 		secondPlayerPanel.add(secondPlayerLabel);
 		secondPlayerPanel.add(secondPlayerCardPanel);
 		/* Board Panel Handling */
@@ -87,7 +85,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	 * @param playerCardPanel - the panel in which the cards must be positioned.
 	 */
 	private void configurePlayerCardPanel (JPanel playerCardPanel) {
-		playerCardPanel.setPreferredSize(new Dimension(300, 500));
+		playerCardPanel.setPreferredSize(new Dimension(300, 450));
 		/* Positioning of the cards of the deck in the playerCardPanel */
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -102,51 +100,13 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 				GridBagConstraints constraints = new GridBagConstraints();
 				constraints.gridx = j;
 				constraints.gridy = i;
-				constraints.ipadx = 15;
-				constraints.ipady = 15;
+				constraints.ipadx = 13;
+				constraints.ipady = 10;
 				playerCardPanel.add(card, constraints);
 			}
 		}
 	}
 	
-	/**
-	 * Positions the card played at each move in the appropriate panel.
-	 * @param referencePanel - the panel in which the played card must be placed.
-	 * @param action - the event occurred on the played card.
-	 */
-	private void playedCardPositioning (Container referencePanel, ActionEvent action) {
-		/* Retrieval of the card on which the event occurred */
-		CardGUI sourceComponent = (CardGUI)action.getSource();
-		/* The card on which the event has occurred is made transparent */
-		sourceComponent.makeTransparent();
-		/* Addition of the card to the panel in which are positioned the played cards */
-		CardGUI playedCard = new CardGUI(sourceComponent.getSource());
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridx = 3;
-		constraints.gridy = 2;
-		int numberComponents = centerPanel.getComponentCount();
-		if (numberComponents >= 1) {
-			int dx = randInt(-80, 80);
-			int dy = randInt(-80, 80);
-			constraints.insets.left = dx;
-			constraints.insets.top = dy;
-		}
-		centerPanel.add(playedCard, constraints, 0);
-	}
-	
-	/**
-	 * Computes a random integer in a generic interval.
-	 * @param min - the minimum value of the generic interval.
-	 * @param max - the maximum value of the generic interval.
-	 * @return a random integer in the interval [min, max].
-	 */
-	private int randInt (int min, int max) {
-		Random random = new Random();
-	    int randomNumber = random.nextInt((max - min) + 1) + min;
-
-	    return randomNumber;
-	}
-
     /* ------------------------------------ First Player CardGUI Action Listener -------------------------------- */
 	
 	/** Inner class implementing the Action Listener for the CardGUI.
@@ -157,7 +117,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		public void actionPerformed(ActionEvent action) {
 			Component component = (Component)action.getSource();
 			component.setEnabled(false);
-			playedCardPositioning(component.getParent(), action);
+			playedCardPositioning(centerPanel, action);
 		}
 
 	}

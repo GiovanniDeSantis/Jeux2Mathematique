@@ -2,7 +2,6 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -84,23 +82,23 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 		/* Fourth Player Card Panel Handling */
 		configurePlayerCardPanel(fourthPlayerCardPanel);
 		/* First Player Panel Handling */
-		firstPlayerPanel.setPreferredSize(new Dimension(370, 325));
+		firstPlayerPanel.setPreferredSize(new Dimension(370, 265));
 		firstPlayerPanel.add(firstPlayerLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
 		/* Second Player Panel Handling */
-		secondPlayerPanel.setPreferredSize(new Dimension(1000, 170));
+		secondPlayerPanel.setPreferredSize(new Dimension(1000, 150));
 		secondPlayerPanel.add(secondPlayerLabel);
 		secondPlayerPanel.add(secondPlayerCardPanel);
 		/* Third Player Panel Handling */
-		thirdPlayerPanel.setPreferredSize(new Dimension(370, 325));
+		thirdPlayerPanel.setPreferredSize(new Dimension(370, 265));
 		thirdPlayerPanel.add(thirdPlayerLabel);
 		thirdPlayerPanel.add(thirdPlayerCardPanel);
 		/* Fourth Player Panel Handling */
-		fourthPlayerPanel.setPreferredSize(new Dimension(1000, 170));
+		fourthPlayerPanel.setPreferredSize(new Dimension(1000, 150));
 		fourthPlayerPanel.add(fourthPlayerLabel);
 		fourthPlayerPanel.add(fourthPlayerCardPanel);
 		/* Center Panel Handling */
-		centerPanel.setPreferredSize(new Dimension(200, 325));
+		centerPanel.setPreferredSize(new Dimension(200, 265));
 		/* Board Panel Handling */
 		add(firstPlayerPanel, BorderLayout.WEST);
 		add(secondPlayerPanel, BorderLayout.NORTH);
@@ -118,13 +116,13 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 		
 		/* Setting the preferred size of the playerCardPanel */
 		if (playerCardPanel == firstPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(345, 320));
+			playerCardPanel.setPreferredSize(new Dimension(345, 260));
 		if (playerCardPanel == secondPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(900, 135));
+			playerCardPanel.setPreferredSize(new Dimension(900, 115));
 		if (playerCardPanel == thirdPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(345, 320));
+			playerCardPanel.setPreferredSize(new Dimension(345, 260));
 		if (playerCardPanel == fourthPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(900, 135));
+			playerCardPanel.setPreferredSize(new Dimension(900, 115));
 		/* Positioning of the cards of the deck in the playerCardPanel */
 		CardGUI card = null;
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -179,44 +177,6 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 			}
 		}
 	}
-	
-	/**
-	 * Positions the card played at each move in the appropriate panel.
-	 * @param referencePanel - the panel in which the played card must be placed.
-	 * @param action - the event occurred on the played card.
-	 */
-	private void playedCardPositioning (Container referencePanel, ActionEvent action) {
-		/* Retrieval of the card on which the event occurred */
-		CardGUI sourceComponent = (CardGUI)action.getSource();
-		/* The card on which the event has occurred is made transparent */
-		sourceComponent.makeTransparent();
-		/* Addition of the card to the panel in which are positioned the played cards */
-		CardGUI playedCard = new CardGUI(sourceComponent.getSource());
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridx = 3;
-		constraints.gridy = 2;
-		int numberComponents = centerPanel.getComponentCount();
-		if (numberComponents >= 1) {
-			int dx = randInt(-80, 80);
-			int dy = randInt(-80, 80);
-			constraints.insets.left = dx;
-			constraints.insets.top = dy;
-		}
-		centerPanel.add(playedCard, constraints, 0);
-	}
-	
-	/**
-	 * Computes a random integer in a generic interval.
-	 * @param min - the minimum value of the generic interval.
-	 * @param max - the maximum value of the generic interval.
-	 * @return a random integer in the interval [min, max].
-	 */
-	private int randInt (int min, int max) {
-		Random random = new Random();
-	    int randomNumber = random.nextInt((max - min) + 1) + min;
-
-	    return randomNumber;
-	}
 
     /* ------------------------------------ First Player CardGUI Action Listener -------------------------------- */
 	
@@ -228,7 +188,7 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 		public void actionPerformed(ActionEvent action) {
 			Component component = (Component)action.getSource();
 			component.setEnabled(false);
-			playedCardPositioning(component.getParent(), action);
+			playedCardPositioning(centerPanel, action);
 		}
 
 	}
