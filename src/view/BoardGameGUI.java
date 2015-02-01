@@ -19,7 +19,7 @@ public class BoardGameGUI extends JPanel {
 	/**
 	 * Initializes the BoardGameGUI.
 	 */
-	protected void init () {
+	protected void init (String[] playersNames, int firstToPlay) {
 		
 	}
 	
@@ -28,20 +28,20 @@ public class BoardGameGUI extends JPanel {
 	 * @param referencePanel - the panel in which the played card must be placed.
 	 * @param action - the event occurred on the played card.
 	 */
-	protected void playedCardPositioning (Container referencePanel, ActionEvent action) {
+	protected void positionPlayedCard (Container referencePanel, ActionEvent action) {
 		/* Retrieval of the card on which the event occurred */
 		CardGUI sourceComponent = (CardGUI)action.getSource();
 		/* The card on which the event has occurred is made transparent */
 		sourceComponent.makeTransparent();
 		/* Addition of the card to the panel in which are positioned the played cards */
-		CardGUI playedCard = new CardGUI(sourceComponent.getSource());
+		CardGUI playedCard = new CardGUI(sourceComponent.getId());
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridx = 3;
 		constraints.gridy = 2;
 		int numberComponents = referencePanel.getComponentCount();
 		if (numberComponents >= 1) {
-			int dx = randInt(-80, 80);
-			int dy = randInt(-80, 80);
+			int dx = randomInteger(-80, 80);
+			int dy = randomInteger(-80, 80);
 			constraints.insets.left = dx;
 			constraints.insets.top = dy;
 		}
@@ -54,7 +54,7 @@ public class BoardGameGUI extends JPanel {
 	 * @param max - the maximum value of the generic interval.
 	 * @return a random integer in the interval [min, max].
 	 */
-	private int randInt (int min, int max) {
+	private int randomInteger (int min, int max) {
 		Random random = new Random();
 	    int randomNumber = random.nextInt((max - min) + 1) + min;
 

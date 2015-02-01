@@ -23,7 +23,7 @@ import model.GameState;
 public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 	
 	private static final long serialVersionUID = 1L;
-	private JPanel firstPlayerPanel, secondPlayerPanel, thirdPlayerPanel, centerPanel;
+	private JPanel firstPlayerPanel, secondPlayerPanel, thirdPlayerPanel, centralPanel;
 	private JPanel firstPlayerCardPanel, secondPlayerCardPanel, thirdPlayerCardPanel;
 	private JLabel firstPlayerLabel, secondPlayerLabel, thirdPlayerLabel;
 	private List<CardGUI> deck;
@@ -45,11 +45,11 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		firstPlayerPanel = new JPanel();
 		secondPlayerPanel = new JPanel();
 		thirdPlayerPanel = new JPanel();
-		centerPanel = new JPanel(new GridBagLayout());
+		centralPanel = new JPanel(new GridBagLayout());
 		/* Cards Creation */
-		deck = new ArrayList<>(GameState.PERIMAIRE_DECK_DIMENSION);
+		deck = new ArrayList<CardGUI>(GameState.PERIMAIRE_DECK_DIMENSION);
 		for (int i = 0; i < GameState.PERIMAIRE_DECK_DIMENSION; i++)
-			deck.add(new CardGUI("" + shuffledDeck[i] + ".png"));
+			deck.add(new CardGUI(shuffledDeck[i]));
 		/* Initialization */
 		init();
 	}
@@ -84,12 +84,12 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		thirdPlayerPanel.add(thirdPlayerLabel);
 		thirdPlayerPanel.add(thirdPlayerCardPanel);
 		/* Center Panel Handling */
-		centerPanel.setPreferredSize(new Dimension(200, 360));
+		centralPanel.setPreferredSize(new Dimension(200, 360));
 		/* Board Panel Handling */
 		add(firstPlayerPanel, BorderLayout.WEST);
 		add(secondPlayerPanel, BorderLayout.NORTH);
 		add(thirdPlayerPanel, BorderLayout.EAST);
-		add(centerPanel, BorderLayout.CENTER);
+		add(centralPanel, BorderLayout.CENTER);
 	}
 	
 	/**
@@ -167,7 +167,7 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		public void actionPerformed(ActionEvent action) {
 			Component component = (Component)action.getSource();
 			component.setEnabled(false);
-			playedCardPositioning(centerPanel, action);
+			positionPlayedCard(centralPanel, action);
 		}
 
 	}

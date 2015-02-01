@@ -2,24 +2,24 @@ package model;
 
 public class Card {
 	private String id;
-	private int area;
 	private int perimeter;
+	private int area;
 	
-	public Card (String id, int area, int perimeter) {
+	public Card (String id, int perimeter, int area) {
 		this.id = id;
-		this.area = area;
 		this.perimeter = perimeter;
+		this.area = area;
 	}
 
 	public String getId() {
 		return id;
 	}
 
-	public int getArea() {
-		return area;
-	}
-
 	public int getPerimeter() {
 		return perimeter;
+	}
+	
+	public int getArea() {
+		return area;
 	}
 }

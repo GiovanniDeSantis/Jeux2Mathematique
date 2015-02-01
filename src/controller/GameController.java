@@ -20,7 +20,11 @@ public class GameController {
 	/**
 	 * Creates the game.
 	 */
-	public String[] createGame () {
-		return gameState.createGame();
-	}	
+	public String[] getShuffledDeck () {
+		return gameState.getShuffledDeck();
+	}
+	
+	public void handlePlayedCard (String id) {
+		gameState.handlePlayedCard(id);
+	}
 }

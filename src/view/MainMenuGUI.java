@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -90,16 +91,22 @@ public class MainMenuGUI extends JPanel {
 		public void actionPerformed(ActionEvent action) {
 			BoardGameGUI boardGame;
 			CardLayout cardLayout;
-			int numberOfPlayers;
+			int numberOfPlayers, firstToPlay;
 			String[] playersNames;
 			String[] shuffledDeck;
 			
-			/* Initialization of the game */
+			/* Request of the desired number of players */
 			numberOfPlayers = getNumberOfPlayers();
+			/* Request of the names of the players */
 			playersNames = getPlayersNames(numberOfPlayers);
+			/* Definition of the player that will make the first move */
+			firstToPlay = randInt(1, numberOfPlayers); //TODO check if this is the right place
+			/* Creation of the game */
 			gameController = new GameController(playersNames);
-			shuffledDeck = gameController.createGame();
-			boardGame = boardGameGUIInitialization(numberOfPlayers, playersNames, shuffledDeck);
+			/* Retrieval of the shuffled deck */
+			shuffledDeck = gameController.getShuffledDeck();
+			/* Board game initialization */
+			boardGame = boardGameGUIInitialization(numberOfPlayers, playersNames, shuffledDeck, firstToPlay);
 			/* Adding of the board game to the CardLayout */
 			fatherContainer.add(boardGame, Application.BOARDGAME);
 			cardLayout = (CardLayout)fatherContainer.getLayout();
@@ -146,17 +153,31 @@ public class MainMenuGUI extends JPanel {
 		}
 		
 		/**
+		 * Computes a random integer in a generic interval.
+		 * @param min - the minimum value of the generic interval.
+		 * @param max - the maximum value of the generic interval.
+		 * @return a random integer in the interval [min, max].
+		 */
+		private int randInt (int min, int max) {
+			Random random = new Random();
+		    int randomNumber = random.nextInt((max - min) + 1) + min;
+
+		    return randomNumber;
+		}
+		
+		/**
 		 * On the basis of the number of players.
 		 * initializes the proper BoardGameGUI.
 		 * @param numberOfPlayers - the number of players.
 		 * @param playersNames - the names of the players.
 		 * @return the initialized BoardGameGUI.
 		 */
-		private BoardGameGUI boardGameGUIInitialization (int numberOfPlayers, String[] playersNames, String[] shuffledDeck) {
+		private BoardGameGUI boardGameGUIInitialization (int numberOfPlayers, String[] playersNames, 
+																String[] shuffledDeck, int firstToPlay) {
 			BoardGameGUI boardGame;
 			
 			switch(numberOfPlayers) {
-				case 2: boardGame = new BoardGameGUI2PlayersPerimaire(playersNames, shuffledDeck);
+				case 2: boardGame = new BoardGameGUI2PlayersPerimaire(gameController, playersNames, shuffledDeck, firstToPlay);
 						break;
 				case 3: boardGame = new BoardGameGUI3PlayersPerimaire(playersNames, shuffledDeck);
 						break;

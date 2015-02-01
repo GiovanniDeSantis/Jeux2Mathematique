@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Class that stores all the relevant information about a game.
@@ -12,24 +11,35 @@ import java.util.Random;
  * @author Giovanni De Santis - Rafael Garcia.
  */
 public class GameState {
-	private List<Player> players;
 	private Deck deck;
+	private List<Player> players;
+	private String lastPlayedCard;
 	
 	public static final int PERIMAIRE_DECK_DIMENSION = 24;
 	
+	/**
+	 * 
+	 * @param playersNames
+	 */
 	public GameState (String[] playersNames) {
+		/* Creation of the deck */
+		deck = new Deck();
 		/* Creation of the players taking part to the game */
 		players = new ArrayList<Player>();
 		for (String name : playersNames) {
 			players.add(new Player(name));
 		}
-		/* Creation of the deck */
-		deck = new Deck();
+		/* Initialization of the last played card */
+		lastPlayedCard = null;
 	}
 	
-	public String[] createGame () {
+	/**
+	 * 
+	 * @return
+	 */
+	public String[] getShuffledDeck () {
 		String[] shuffledDeck = new String[PERIMAIRE_DECK_DIMENSION];
-		/* Shuffling the deck */
+		
 		deck.shuffle();
 		for (int i = 0; i < PERIMAIRE_DECK_DIMENSION; i++) {
 			shuffledDeck[i] = deck.getTopCard().getId();
@@ -38,10 +48,11 @@ public class GameState {
 		return shuffledDeck;
 	}
 	
-	public int determineFirstPlayer (int min, int max) {
-		Random random = new Random();
-	    int randomNumber = random.nextInt((max - min) + 1) + min;
-
-	    return randomNumber;		
+	/**
+	 * 
+	 * @param id
+	 */
+	public void handlePlayedCard (String id) {
+		
 	}
 }
