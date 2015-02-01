@@ -13,6 +13,8 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import model.GameState;
+
 /**
  * Class that implements the User Interface of the game board in the
  * case there are three players.
@@ -20,9 +22,6 @@ import javax.swing.JPanel;
  */
 public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 	
-	// TODO Better handle this thing.
-	private final int deckDimension = 24;
-
 	private static final long serialVersionUID = 1L;
 	private JPanel firstPlayerPanel, secondPlayerPanel, thirdPlayerPanel, centerPanel;
 	private JPanel firstPlayerCardPanel, secondPlayerCardPanel, thirdPlayerCardPanel;
@@ -32,7 +31,7 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 	/**
 	 * Class constructor.
 	 */
-	public BoardGameGUI3PlayersPerimaire (String[] playersNames) {
+	public BoardGameGUI3PlayersPerimaire (String[] playersNames, String[] shuffledDeck) {
 		super();
 		setLayout(new BorderLayout());
 		/* Labels Creation */
@@ -48,10 +47,9 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		thirdPlayerPanel = new JPanel();
 		centerPanel = new JPanel(new GridBagLayout());
 		/* Cards Creation */
-		//TODO To generalize and modify.
-		deck = new ArrayList<>(deckDimension);
-		for (int i = 1; i <= deckDimension; i++)
-			deck.add(new CardGUI("" + i + ".png"));
+		deck = new ArrayList<>(GameState.PERIMAIRE_DECK_DIMENSION);
+		for (int i = 0; i < GameState.PERIMAIRE_DECK_DIMENSION; i++)
+			deck.add(new CardGUI("" + shuffledDeck[i] + ".png"));
 		/* Initialization */
 		init();
 	}
@@ -131,7 +129,7 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		if (playerCardPanel == secondPlayerCardPanel) {
 			for (int i = 0; i < 2; i++) {
 				for (int j = 0; j < 4; j++) {
-					card = deck.get((deckDimension/3) + (i + j) + (i * 3));
+					card = deck.get((GameState.PERIMAIRE_DECK_DIMENSION/3) + (i + j) + (i * 3));
 					card.addActionListener(new PlayerCardGUIListener());
 					constraints.gridx = j;
 					constraints.gridy = i;
@@ -145,8 +143,8 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 		if (playerCardPanel == thirdPlayerCardPanel) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					if ((((deckDimension/3) * 2) + (i + j) + (i * 2)) != 24) {
-						card = deck.get(((deckDimension/3) * 2) + (i + j) + (i * 2));
+					if ((((GameState.PERIMAIRE_DECK_DIMENSION/3) * 2) + (i + j) + (i * 2)) != 24) {
+						card = deck.get(((GameState.PERIMAIRE_DECK_DIMENSION/3) * 2) + (i + j) + (i * 2));
 						card.addActionListener(new PlayerCardGUIListener());
 						constraints.gridx = j;
 						constraints.gridy = i;

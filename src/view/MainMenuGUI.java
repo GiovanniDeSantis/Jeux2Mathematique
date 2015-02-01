@@ -12,11 +12,14 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controller.GameController;
+
 public class MainMenuGUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private Application application;
 	private Container fatherContainer;
+	private GameController gameController;
 	private JPanel newGamePanel, optionsPanel, exitPanel;
 	private JButton newGameButton, optionsButton, exitButton;
 
@@ -26,7 +29,7 @@ public class MainMenuGUI extends JPanel {
 	 */
 	public MainMenuGUI (Application application, Container fatherContainer) {
 		super();
-		/* Father Container Initialization */
+		/* Member Data Initialization */
 		this.application = application;
 		this.fatherContainer = fatherContainer;
 		/* Panels Creation */
@@ -89,11 +92,14 @@ public class MainMenuGUI extends JPanel {
 			CardLayout cardLayout;
 			int numberOfPlayers;
 			String[] playersNames;
+			String[] shuffledDeck;
 			
 			/* Initialization of the game */
 			numberOfPlayers = getNumberOfPlayers();
 			playersNames = getPlayersNames(numberOfPlayers);
-			boardGame = boardGameGUIInitialization(numberOfPlayers, playersNames);
+			gameController = new GameController(playersNames);
+			shuffledDeck = gameController.createGame();
+			boardGame = boardGameGUIInitialization(numberOfPlayers, playersNames, shuffledDeck);
 			/* Adding of the board game to the CardLayout */
 			fatherContainer.add(boardGame, Application.BOARDGAME);
 			cardLayout = (CardLayout)fatherContainer.getLayout();
@@ -146,15 +152,15 @@ public class MainMenuGUI extends JPanel {
 		 * @param playersNames - the names of the players.
 		 * @return the initialized BoardGameGUI.
 		 */
-		private BoardGameGUI boardGameGUIInitialization (int numberOfPlayers, String[] playersNames) {
+		private BoardGameGUI boardGameGUIInitialization (int numberOfPlayers, String[] playersNames, String[] shuffledDeck) {
 			BoardGameGUI boardGame;
 			
 			switch(numberOfPlayers) {
-				case 2: boardGame = new BoardGameGUI2PlayersPerimaire(playersNames);
+				case 2: boardGame = new BoardGameGUI2PlayersPerimaire(playersNames, shuffledDeck);
 						break;
-				case 3: boardGame = new BoardGameGUI3PlayersPerimaire(playersNames);
+				case 3: boardGame = new BoardGameGUI3PlayersPerimaire(playersNames, shuffledDeck);
 						break;
-				case 4: boardGame = new BoardGameGUI4PlayersPerimaire(playersNames);
+				case 4: boardGame = new BoardGameGUI4PlayersPerimaire(playersNames, shuffledDeck);
 						break;
 				default: boardGame = new BoardGameGUI();
 						 break;

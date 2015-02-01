@@ -5,7 +5,7 @@ public class Card {
 	private int area;
 	private int perimeter;
 	
-	public Card(String id, int area, int perimeter) {
+	public Card (String id, int area, int perimeter) {
 		this.id = id;
 		this.area = area;
 		this.perimeter = perimeter;
@@ -19,15 +19,7 @@ public class Card {
 		return area;
 	}
 
-	public void setArea(int area) {
-		this.area = area;
-	}
-
 	public int getPerimeter() {
 		return perimeter;
-	}
-
-	public void setPerimeter(int perimeter) {
-		this.perimeter = perimeter;
 	}
 }

@@ -1,6 +1,8 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Class that stores all the relevant information about a game.
@@ -10,43 +12,36 @@ import java.util.List;
  * @author Giovanni De Santis - Rafael Garcia.
  */
 public class GameState {
-	protected List<Player> players;
-	protected List<String> playersOrder;
-	protected int currentPlayer;
+	private List<Player> players;
+	private Deck deck;
 	
-	/**
-	 * Performs all the actions necessary to create a new game.
-	 */
-	public String[] createGame (int numberOfPlayers) {
-		return null;
-	}
+	public static final int PERIMAIRE_DECK_DIMENSION = 24;
 	
-	/*
-	public void createTeam (String name, int numberOfPlayers) {
-		//TODO check if any rule is being broken.
-		this.teams.add(new Team(numberOfPlayers, name));
-	}
-	
-	public void insertPlayer (String playerName, String teamName) {
-		for (Team team: this.teams){
-			if (team.getName().equals(teamName)){
-				team.insertPlayer(playerName);
-			}
+	public GameState (String[] playersNames) {
+		/* Creation of the players taking part to the game */
+		players = new ArrayList<Player>();
+		for (String name : playersNames) {
+			players.add(new Player(name));
 		}
+		/* Creation of the deck */
+		deck = new Deck();
 	}
 	
-	protected void setPlayingOrder () {
-		this.playersOrder = new CircularList<>();
-		for (Team team: this.teams){
-			for (String playerName: team.getPlayersNames()){
-				this.playersOrder.add(playerName);
-			}
+	public String[] createGame () {
+		String[] shuffledDeck = new String[PERIMAIRE_DECK_DIMENSION];
+		/* Shuffling the deck */
+		deck.shuffle();
+		for (int i = 0; i < PERIMAIRE_DECK_DIMENSION; i++) {
+			shuffledDeck[i] = deck.getTopCard().getId();
 		}
-		Collections.shuffle(this.playersOrder);
-		this.currentPlayer = 0;
-	}*/
+		
+		return shuffledDeck;
+	}
 	
-	//public abstract void startGame();
-	
-	//public abstract void updateGameState(Action movement);
+	public int determineFirstPlayer (int min, int max) {
+		Random random = new Random();
+	    int randomNumber = random.nextInt((max - min) + 1) + min;
+
+	    return randomNumber;		
+	}
 }

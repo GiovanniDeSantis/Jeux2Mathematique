@@ -12,15 +12,14 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import model.GameState;
+
 /**
  * Class that implements the User Interface of the game board in the
  * case there are two players.
  * @author Giovanni De Santis, Rafael Garcia.
  */
 public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
-
-	// TODO Better handle this thing.
-	private final int deckDimension = 24;
 	
 	private static final long serialVersionUID = 1L;
 	private JPanel firstPlayerPanel, secondPlayerPanel, centerPanel;
@@ -31,7 +30,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	/**
 	 * Class constructor.
 	 */
-	public BoardGameGUI2PlayersPerimaire (String[] playersNames) {
+	public BoardGameGUI2PlayersPerimaire (String[] playersNames, String[] shuffledDeck) {
 		super();
 		/* Labels Creation */
 		firstPlayerLabel = new JLabel("Jeu de " + playersNames[0]);
@@ -43,10 +42,9 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		centerPanel = new JPanel(new GridBagLayout());
 		secondPlayerPanel = new JPanel();
 		/* Cards Creation */
-		//TODO To generalize and modify.
-		deck = new ArrayList<>(deckDimension);
-		for (int i = 1; i <= deckDimension; i++)
-			deck.add(new CardGUI("" + i + ".png"));		
+		deck = new ArrayList<CardGUI>(GameState.PERIMAIRE_DECK_DIMENSION);
+		for (int i = 0; i < GameState.PERIMAIRE_DECK_DIMENSION; i++)
+			deck.add(new CardGUI("" + shuffledDeck[i] + ".png"));		
 		/* Initialization */
 		init();
 	}
@@ -95,7 +93,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 					card = deck.get((i + j) + (i * 2));
 				/* secondPlayerCardPanel */
 				else
-					card = deck.get((deckDimension/2) + (i + j) + (i * 2));
+					card = deck.get((GameState.PERIMAIRE_DECK_DIMENSION/2) + (i + j) + (i * 2));
 				card.addActionListener(new PlayerCardGUIListener());
 				GridBagConstraints constraints = new GridBagConstraints();
 				constraints.gridx = j;
