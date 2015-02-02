@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 public class Application extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	/* Identifiers of the cards associated to the Card Layout Manager */
 	final static String MAINMENU = "Main Menu";
 	final static String BOARDGAME = "Board Game";
 	private JPanel cardsContainer, mainMenu;

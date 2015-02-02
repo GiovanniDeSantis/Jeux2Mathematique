@@ -22,6 +22,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	
 	//TODO Check the handling of the game controller. Static class or not.
 	//	   It is defined in the main menu and in each board game.
+	//TODO Generalization: deck in the principal class?
 	
 	private static final long serialVersionUID = 1L;
 	private GameController gameController;
@@ -68,6 +69,10 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		firstToPlayLabel.setPreferredSize(new Dimension(260, 80));
 		firstToPlayLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* Player Card Panels Handling */
+		/* This switch is used to handle the initial distribution
+		 * of the cards; it is performed on the basis of the order
+		 * with which the different players have to make a move.
+		 */
 		switch (firstToPlay) {
 			case 1: configurePlayerCardPanel(firstPlayerCardPanel);
 					configurePlayerCardPanel(secondPlayerCardPanel);
@@ -147,10 +152,10 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 				firstToPlayLabel.setVisible(false);
 				centralPanel.remove(firstToPlayLabel);
 			}
-			/*  */
+			/* Handling of the move performed by the generic player */
 			CardGUI playedCard = (CardGUI)action.getSource();
 			String playedCardId = playedCard.getId();
-			gameController.handlePlayedCard(playedCardId); //TODO To complete.
+			gameController.handlePlayedCard(playedCardId);
 			/* Positioning of the played card in the centralPanel */
 			playedCard.setEnabled(false);
 			positionPlayedCard(centralPanel, action);

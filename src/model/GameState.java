@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class that stores all the relevant information about a game.
+ * Class that stores all the relevant information about a round
+ * of the board game.
  * Through this class is possible to control the state of the
- * game and, every time that is necessary, update it properly.
+ * round and, every time that is necessary, update it properly.
  * 
- * @author Giovanni De Santis - Rafael Garcia.
+ * @author Giovanni De Santis, Rafael Garcia.
  */
 public class GameState {
 	private Deck deck;
@@ -18,8 +19,8 @@ public class GameState {
 	public static final int PERIMAIRE_DECK_DIMENSION = 24;
 	
 	/**
-	 * 
-	 * @param playersNames
+	 * Class constructor.
+	 * @param playersNames - the names of the players associated to the game.
 	 */
 	public GameState (String[] playersNames) {
 		/* Creation of the deck */
@@ -34,8 +35,8 @@ public class GameState {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Returns the shuffled deck.
+	 * @return the shuffled deck.
 	 */
 	public String[] getShuffledDeck () {
 		String[] shuffledDeck = new String[PERIMAIRE_DECK_DIMENSION];

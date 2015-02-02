@@ -3,10 +3,17 @@ package model;
 import java.util.Collections;
 import java.util.Stack;
 
+/**
+ * Class that models the deck of the board game.
+ * @author Giovanni De Santis, Rafael Garcia.
+ */
 public class Deck {
 	
 	private Stack<Card> deck;
 
+	/**
+	 * Class constructor.
+	 */
 	public Deck () {
 		/* Deck creation */
 		deck = new Stack<Card>();
@@ -36,10 +43,17 @@ public class Deck {
 		deck.push(new Card("X", 14, 7));
 	}
 	
+	/**
+	 * Returns the first card of the deck.
+	 * @return the card on the top of the deck.
+	 */
 	public Card getTopCard () {
 		return deck.pop();
 	}
 	
+	/**
+	 * Shuffles the deck.
+	 */
 	public void shuffle () {
 		Collections.shuffle(deck);
 	}
