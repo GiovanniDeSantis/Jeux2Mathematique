@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,14 +22,13 @@ import model.GameState;
 public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	
 	//TODO Check the handling of the game controller. Static class or not.
-	//	   It is defined in the main menu and in each board game.
-	//TODO Generalization: deck in the principal class?
+	//	   It is defined in the main menu and in every board game.
 	
 	private static final long serialVersionUID = 1L;
 	private GameController gameController;
 	private JPanel firstPlayerPanel, secondPlayerPanel, centralPanel;
 	private JPanel firstPlayerCardPanel, secondPlayerCardPanel;
-	private JLabel firstPlayerLabel, secondPlayerLabel, firstToPlayLabel;
+	private JLabel firstPlayerLabel, secondPlayerLabel, firstToPlayLabel, informationMessageLabel;
 	private Stack<CardGUI> deck;
 
 	/**
@@ -43,6 +43,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		firstPlayerLabel = new JLabel("Jeu de " + playersNames[0]);
 		secondPlayerLabel = new JLabel("Jeu de " + playersNames[1]);
 		firstToPlayLabel = new JLabel();
+		informationMessageLabel = new JLabel();
 		/* Panels Creation */
 		firstPlayerCardPanel = new JPanel(new GridBagLayout());
 		secondPlayerCardPanel = new JPanel(new GridBagLayout());
@@ -68,6 +69,9 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		/* First to Play Label Handling */
 		firstToPlayLabel.setPreferredSize(new Dimension(260, 80));
 		firstToPlayLabel.setHorizontalAlignment(JLabel.CENTER);
+		/* Information Message Label Handling */
+		informationMessageLabel.setPreferredSize(new Dimension(260, 80));
+		informationMessageLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* Player Card Panels Handling */
 		/* This switch is used to handle the initial distribution
 		 * of the cards; it is performed on the basis of the order
@@ -92,6 +96,10 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		firstPlayerPanel.add(firstPlayerCardPanel);
 		/* Central Panel Handling */
 		centralPanel.setPreferredSize(new Dimension(260, 490));
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.gridx = 0;
+		constraints.gridwidth = 4;
+		centralPanel.add(informationMessageLabel, constraints, 0);
 		centralPanel.add(firstToPlayLabel);
 		/* Second Player Panel Handling */
 		secondPlayerPanel.setPreferredSize(new Dimension(300, 490));
@@ -139,7 +147,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		}
 	}
 	
-    /* ------------------------------------ First Player CardGUI Action Listener -------------------------------- */
+    /* ------------------------------------ Player CardGUI Action Listener -------------------------------- */
 	
 	/** Inner class implementing the Action Listener for the CardGUI.
 	  */
@@ -147,29 +155,42 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 
 		@Override
 		public void actionPerformed(ActionEvent action) {
-			/* Removal of the firstToPlayLabel from the centralPanel */
+			/* If present, removal of the firstToPlayLabel from the centralPanel */
 			if (firstToPlayLabel.isShowing()) {
 				firstToPlayLabel.setVisible(false);
 				centralPanel.remove(firstToPlayLabel);
 			}
+			/* If present, removal of the informationMessageLabel from the centralPanel */
+			if (! informationMessageLabel.getText().isEmpty())
+				informationMessageLabel.setText("");
 			/* Handling of the move performed by the generic player */
 			CardGUI playedCard = (CardGUI)action.getSource();
-			String playedCardId = playedCard.getId();
-			gameController.handlePlayedCard(playedCardId);
-			/* Positioning of the played card in the centralPanel */
-			playedCard.setEnabled(false);
-			positionPlayedCard(centralPanel, action);
-			/* Enabling and disabling of the card panels 
-			 * for the handling of the players' turns
-			 */
-			if (playedCard.getParent() == firstPlayerCardPanel) {
-				enablePlayerCardPanel(firstPlayerCardPanel, false);
-				enablePlayerCardPanel(secondPlayerCardPanel, true);
-			}
+			String playedCardId = playedCard.getId(); //TODO Repetition in the positioning
+			boolean moveValidity = gameController.handlePlayedCard(playedCardId);
+			Container playedCardContainer = playedCard.getParent();
+			/* Not valid move: notify the user that is move is not correct */
+			if (!moveValidity) {
+				informationMessageLabel.setText("Mouvement pas valable!");
+			} 
+			/* Valid move: positioning of the played card in the centralPanel */
 			else {
-				enablePlayerCardPanel(secondPlayerCardPanel, false);
-				enablePlayerCardPanel(firstPlayerCardPanel, true);				
+				playedCard.setEnabled(false);
+				positionPlayedCard(centralPanel, action);
+				/* Enabling and disabling of the card panels 
+				 * for the handling of the players' turns
+				 */
+				if (playedCardContainer == firstPlayerCardPanel) {
+					enablePlayerCardPanel(firstPlayerCardPanel, false);
+					enablePlayerCardPanel(secondPlayerCardPanel, true);
+				}
+				else {
+					enablePlayerCardPanel(secondPlayerCardPanel, false);
+					enablePlayerCardPanel(firstPlayerCardPanel, true);				
+				}
 			}
+			/* End of Game Handling */
+			if (playedCardContainer.getComponentCount() == 0)
+				informationMessageLabel.setText("Jeu terminé");
 		}
 
 	}

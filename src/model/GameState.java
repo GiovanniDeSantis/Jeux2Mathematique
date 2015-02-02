@@ -14,7 +14,7 @@ import java.util.List;
 public class GameState {
 	private Deck deck;
 	private List<Player> players;
-	private String lastPlayedCard;
+	private Card lastPlayedCard;
 	
 	public static final int PERIMAIRE_DECK_DIMENSION = 24;
 	
@@ -42,18 +42,27 @@ public class GameState {
 		String[] shuffledDeck = new String[PERIMAIRE_DECK_DIMENSION];
 		
 		deck.shuffle();
-		for (int i = 0; i < PERIMAIRE_DECK_DIMENSION; i++) {
-			shuffledDeck[i] = deck.getTopCard().getId();
-		}
+		shuffledDeck = deck.getStringDeck();
 		
 		return shuffledDeck;
 	}
 	
-	/**
-	 * 
-	 * @param id
-	 */
-	public void handlePlayedCard (String id) {
+	public boolean handlePlayedCard (String id) {
+		boolean moveValidity = true;
+		Card playedCard = deck.getCard(id);
 		
+		if (lastPlayedCard != null) {
+			if (((playedCard.getArea()) == (lastPlayedCard.getArea()))
+					| ((playedCard.getPerimeter()) == (lastPlayedCard.getPerimeter()))) {
+				moveValidity = true;
+				lastPlayedCard = playedCard;
+			} else {
+				moveValidity = false;
+			}
+		} else {
+			lastPlayedCard = playedCard;			
+		}
+		
+		return moveValidity;
 	}
 }

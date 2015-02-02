@@ -24,7 +24,7 @@ public class GameController {
 		return gameState.getShuffledDeck();
 	}
 	
-	public void handlePlayedCard (String id) {
-		gameState.handlePlayedCard(id);
+	public boolean handlePlayedCard (String id) {
+		return gameState.handlePlayedCard(id);
 	}
 }

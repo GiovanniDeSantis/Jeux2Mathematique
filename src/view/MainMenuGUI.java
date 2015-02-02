@@ -38,9 +38,9 @@ public class MainMenuGUI extends JPanel {
 		optionsPanel = new JPanel(new BorderLayout());
 		exitPanel = new JPanel(new BorderLayout());
 		/* Buttons Creation */
-		newGameButton = new JButton("New Game");
+		newGameButton = new JButton("Nouvelle Partie");
 		optionsButton = new JButton("Options");
-		exitButton = new JButton("Exit");
+		exitButton = new JButton("Sortie");
 		/* Initialization */
 		init();
 	}
@@ -179,9 +179,9 @@ public class MainMenuGUI extends JPanel {
 			switch(numberOfPlayers) {
 				case 2: boardGame = new BoardGameGUI2PlayersPerimaire(gameController, playersNames, shuffledDeck, firstToPlay);
 						break;
-				case 3: boardGame = new BoardGameGUI3PlayersPerimaire(playersNames, shuffledDeck);
+				case 3: boardGame = new BoardGameGUI3PlayersPerimaire(gameController, playersNames, shuffledDeck, firstToPlay);
 						break;
-				case 4: boardGame = new BoardGameGUI4PlayersPerimaire(playersNames, shuffledDeck);
+				case 4: boardGame = new BoardGameGUI4PlayersPerimaire(gameController, playersNames, shuffledDeck, firstToPlay);
 						break;
 				default: boardGame = new BoardGameGUI();
 						 break;
