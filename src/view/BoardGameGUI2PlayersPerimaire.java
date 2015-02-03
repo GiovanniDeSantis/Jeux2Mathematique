@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Stack;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -26,6 +27,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	
 	private static final long serialVersionUID = 1L;
 	private GameController gameController;
+	private JButton firstPlayerPassTurnButton, secondPlayerPassTurnButton;
 	private JPanel firstPlayerPanel, secondPlayerPanel, centralPanel;
 	private JPanel firstPlayerCardPanel, secondPlayerCardPanel;
 	private JLabel firstPlayerLabel, secondPlayerLabel, firstToPlayLabel, informationMessageLabel;
@@ -39,6 +41,9 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		super();
 		/* Member Data Initialization */
 		this.gameController = gameController;
+		/* Button Initialization */
+		firstPlayerPassTurnButton = new JButton("Passe Tour");
+		secondPlayerPassTurnButton = new JButton("Passe Tour");
 		/* Labels Creation */
 		firstPlayerLabel = new JLabel("Jeu de " + playersNames[0]);
 		secondPlayerLabel = new JLabel("Jeu de " + playersNames[1]);
@@ -60,6 +65,17 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	
 	@Override
 	protected void init (String[] playersNames, int firstToPlay) {
+		/* Button Handling */
+		firstPlayerPassTurnButton.setPreferredSize(new Dimension(115, 20));
+		firstPlayerPassTurnButton.setBorderPainted(false);
+		firstPlayerPassTurnButton.setContentAreaFilled(false);
+		firstPlayerPassTurnButton.setFocusable(false);
+		firstPlayerPassTurnButton.addActionListener(new PassTurnButtonListener());
+		secondPlayerPassTurnButton.setPreferredSize(new Dimension(115, 20));
+		secondPlayerPassTurnButton.setBorderPainted(false);
+		secondPlayerPassTurnButton.setContentAreaFilled(false);
+		secondPlayerPassTurnButton.setFocusable(false);
+		secondPlayerPassTurnButton.addActionListener(new PassTurnButtonListener());
 		/* First Player Label Handling */
 		firstPlayerLabel.setPreferredSize(new Dimension(300,20));
 		firstPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -80,20 +96,21 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		switch (firstToPlay) {
 			case 1: configurePlayerCardPanel(firstPlayerCardPanel);
 					configurePlayerCardPanel(secondPlayerCardPanel);
-					enablePlayerCardPanel(secondPlayerCardPanel, false);
+					enablePlayerPanel(secondPlayerCardPanel, false);
 					firstToPlayLabel.setText("Le premier joueur sera: " + playersNames[0]);
 					break;
 			case 2: configurePlayerCardPanel(secondPlayerCardPanel);
 					configurePlayerCardPanel(firstPlayerCardPanel);
-					enablePlayerCardPanel(firstPlayerCardPanel, false);
+					enablePlayerPanel(firstPlayerCardPanel, false);
 					firstToPlayLabel.setText("Le premier joueur sera: " + playersNames[1]);
 					break;
 			default: break;
 		}
 		/* First Player Panel Handling */
-		firstPlayerPanel.setPreferredSize(new Dimension(300, 490));
+		firstPlayerPanel.setPreferredSize(new Dimension(300, 510));
 		firstPlayerPanel.add(firstPlayerLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
+		firstPlayerPanel.add(firstPlayerPassTurnButton);
 		/* Central Panel Handling */
 		centralPanel.setPreferredSize(new Dimension(260, 490));
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -102,9 +119,10 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		centralPanel.add(informationMessageLabel, constraints, 0);
 		centralPanel.add(firstToPlayLabel);
 		/* Second Player Panel Handling */
-		secondPlayerPanel.setPreferredSize(new Dimension(300, 490));
+		secondPlayerPanel.setPreferredSize(new Dimension(300, 510));
 		secondPlayerPanel.add(secondPlayerLabel);
 		secondPlayerPanel.add(secondPlayerCardPanel);
+		secondPlayerPanel.add(secondPlayerPassTurnButton);
 		/* Board Panel Handling */
 		add(firstPlayerPanel);
 		add(centralPanel);
@@ -118,12 +136,13 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	 */
 	private void configurePlayerCardPanel (JPanel playerCardPanel) {
 		playerCardPanel.setPreferredSize(new Dimension(300, 450));
+		CardGUI card;
+		GridBagConstraints constraints = new GridBagConstraints();
 		/* Positioning of the cards of the deck in the playerCardPanel */
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 3; j++) {
-				CardGUI card = deck.pop();
+				card = deck.pop();
 				card.addActionListener(new PlayerCardGUIListener());
-				GridBagConstraints constraints = new GridBagConstraints();
 				constraints.gridx = j;
 				constraints.gridy = i;
 				constraints.ipadx = 13;
@@ -133,15 +152,28 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		}
 	}
 	
+	// TODO Check correctness.
 	/**
-	 * Enable/disable all the CardGUI of a given playerCardPanel.
-	 * @param playerCardPanel - the panel in which the cards must be enabled/disabled.
-	 * @param value - if 'true', the cards are enabled;
-	 * 				  if 'false', the cards are disabled.
+	 * 
+	 * @param playerCardPanel
+	 * @param value
+	 */
+	private void enablePlayerPanel (JPanel playerCardPanel, boolean value) {
+		enablePlayerCardPanel(playerCardPanel, value);
+		if (playerCardPanel == firstPlayerCardPanel)
+			firstPlayerPassTurnButton.setEnabled(value);
+		if (playerCardPanel == secondPlayerCardPanel)
+			secondPlayerPassTurnButton.setEnabled(value);
+	}
+	
+	/**
+	 * 
+	 * @param playerCardPanel
+	 * @param value
 	 */
 	private void enablePlayerCardPanel (JPanel playerCardPanel, boolean value) {
 		int numberOfComponents = playerCardPanel.getComponentCount();
-		for (int i = 0; i < numberOfComponents; i++) {
+		for (int i = 0; i < (numberOfComponents); i++) {
 			CardGUI card = (CardGUI)playerCardPanel.getComponent(i);
 			card.enableCard(value);
 		}
@@ -160,7 +192,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 				firstToPlayLabel.setVisible(false);
 				centralPanel.remove(firstToPlayLabel);
 			}
-			/* If present, removal of the informationMessageLabel from the centralPanel */
+			/* If present, removal of the text contained in the informationMessageLabel */
 			if (! informationMessageLabel.getText().isEmpty())
 				informationMessageLabel.setText("");
 			/* Handling of the move performed by the generic player */
@@ -180,12 +212,12 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 				 * for the handling of the players' turns
 				 */
 				if (playedCardContainer == firstPlayerCardPanel) {
-					enablePlayerCardPanel(firstPlayerCardPanel, false);
-					enablePlayerCardPanel(secondPlayerCardPanel, true);
+					enablePlayerPanel(firstPlayerCardPanel, false);
+					enablePlayerPanel(secondPlayerCardPanel, true);
 				}
 				else {
-					enablePlayerCardPanel(secondPlayerCardPanel, false);
-					enablePlayerCardPanel(firstPlayerCardPanel, true);				
+					enablePlayerPanel(secondPlayerCardPanel, false);
+					enablePlayerPanel(firstPlayerCardPanel, true);				
 				}
 			}
 			/* End of Game Handling */
@@ -194,4 +226,31 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		}
 
 	}
+	
+    /* ------------------------------------ Pass Turn Button Action Listener -------------------------------- */
+
+	/** Inner class implementing the Action Listener for the Pass Turn Button.
+	  */
+	public class PassTurnButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent action) {
+			/* If present, removal of the firstToPlayLabel from the centralPanel */
+			if (firstToPlayLabel.isShowing()) {
+				firstToPlayLabel.setVisible(false);
+				centralPanel.remove(firstToPlayLabel);
+			}
+			JButton clickedButton = (JButton)action.getSource();
+			Container buttonContainer = clickedButton.getParent();
+			if (buttonContainer == firstPlayerPanel) {
+				enablePlayerPanel(firstPlayerCardPanel, false);
+				enablePlayerPanel(secondPlayerCardPanel, true);
+			} else {
+				enablePlayerPanel(secondPlayerCardPanel, false);
+				enablePlayerPanel(firstPlayerCardPanel, true);
+			}
+		}
+	
+	}
+	
 }

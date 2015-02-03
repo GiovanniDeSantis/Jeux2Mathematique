@@ -53,16 +53,19 @@ public class MainMenuGUI extends JPanel {
 		newGameButton.setPreferredSize(new Dimension(400, 100));
 		newGameButton.setContentAreaFilled(false);
 		newGameButton.setBorderPainted(false);
+		newGameButton.setFocusable(false);
 		newGameButton.addActionListener(new NewGameListener());
 		/* Options Button Handling */
 		optionsButton.setPreferredSize(new Dimension(400, 100));
 		optionsButton.setContentAreaFilled(false);
 		optionsButton.setBorderPainted(false);
+		optionsButton.setFocusable(false);
 		optionsButton.addActionListener(new OptionsListener());
 		/* Exit Button Handling */
 		exitButton.setPreferredSize(new Dimension(400, 100));
 		exitButton.setContentAreaFilled(false);
 		exitButton.setBorderPainted(false);
+		exitButton.setFocusable(false);
 		exitButton.addActionListener(new ExitListener());
 		/* New Game Panel Handling */
 		newGamePanel.setPreferredSize(new Dimension(400, 150));
