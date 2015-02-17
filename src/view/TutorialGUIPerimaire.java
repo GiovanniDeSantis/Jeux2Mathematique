@@ -55,7 +55,7 @@ public class TutorialGUIPerimaire extends JPanel {
 		lowerPanel = new JPanel();
 		/* Cards Creation */
 		String[] tutorialDeck = {"O", "N", "W", "B", "H", "D", "M", "I", "J", "A", "S", "F",
-								"C", "T", "P", "V", "R", "K", "U", "X", "G", "E", "L", "Q"};
+		"C", "T", "P", "V", "R", "K", "U", "X", "G", "E", "L", "Q"};
 		deck = new Stack<CardGUI>();
 		for (int i = 0; i < GameState.PERIMAIRE_DECK_DIMENSION; i++)
 			deck.push(new CardGUI(tutorialDeck[i]));
@@ -96,8 +96,8 @@ public class TutorialGUIPerimaire extends JPanel {
 		informationMessageLabel.setMaximumSize(informationMessageLabelDimension);
 		informationMessageLabel.setHorizontalAlignment(JLabel.CENTER);
 		informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-										+ "Ce jeu consiste à empiler des cartes par égalités d'aires et de périmètres."
-										+ "<br>Le but est être le premier à se défaire de ses cartes</div></html>");
+				+ "Ce jeu consiste à empiler des cartes par égalités d'aires et de périmètres."
+				+ "<br>Le but est être le premier à se défaire de ses cartes</div></html>");
 		/* Player Card Panels Handling */
 		configurePlayerCardPanel(firstPlayerCardPanel);
 		configurePlayerCardPanel(secondPlayerCardPanel);
@@ -194,105 +194,105 @@ public class TutorialGUIPerimaire extends JPanel {
 				tutorialPhase++;
 			switch (tutorialPhase) {
 				case 0: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Ce jeu consiste à empiler des cartes par égalités d'aires et de périmètres."
-														+ "<br>Le but est être le premier à se défaire de ses cartes</div></html>");
+						+ "Ce jeu consiste à empiler des cartes par égalités d'aires et de périmètres."
+						+ "<br>Le but est être le premier à se défaire de ses cartes</div></html>");
 						break;
 				case 1: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Toute carte empilée doit représenter une figure de même aire ou de même "
-														+ "périmètre que la figure de la carte du dessous.</div></html>");
+						+ "Toute carte empilée doit représenter une figure de même aire ou de même "
+						+ "périmètre que la figure de la carte du dessous.</div></html>");
 						break;
 				
 				case 2: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Le joueur désigné pour débuter la partie, retire de son jeu la carte de "
-														+ "son choix et la pose sur la table.<br>Le premier joueur est Carolina."
-														+ "</div></html>");
+						+ "Le joueur désigné pour débuter la partie, retire de son jeu la carte de "
+						+ "son choix et la pose sur la table.<br>Le premier joueur est Carolina."
+						+ "</div></html>");
 						if (sourceButton == beforeButton)
 							removeLastCard(firstPlayerCardPanel, 9);
 						break;
 				case 3: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Carolina joue la carte P de aire 5 et périmètre 12.<br> Le joueur "
-														+ "suivant doit poser sur la carte précédente une carte de son jeu.</div></html>");
+						+ "Carolina joue la carte P de aire 5 et périmètre 12.<br> Le joueur "
+						+ "suivant doit poser sur la carte précédente une carte de son jeu.</div></html>");
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 7);
 						if (sourceButton == nextButton)
 							positionPlayedCard(firstPlayerCardPanel, 9);
 						break;
 				case 4: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Mehdi joue la carte H de <font color=\"red\">aire 5</font> et "
-														+ "<font color=\"red\">périmètre 12</font>.<br>Poser une carte représentant"
-														+ " une figure de même aire et de même périmètre permet de rejouer.</div></html>");
+						+ "Mehdi joue la carte H de <font color=\"red\">aire 5</font> et "
+						+ "<font color=\"red\">périmètre 12</font>.<br>Poser une carte représentant"
+						+ " une figure de même aire et de même périmètre permet de rejouer.</div></html>");
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 10);
 						if (sourceButton == nextButton)
 							positionPlayedCard(secondPlayerCardPanel, 7);
 						break;
 				case 5: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Mehdi rejoue en posant la carte N de <font color=\"red\">aire 5</font> et "
-														+ "<font color=\"red\">périmètre 12</font>.</div></html>");
+						+ "Mehdi rejoue en posant la carte N de <font color=\"red\">aire 5</font> et "
+						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 8);
 						if (sourceButton == nextButton)
 							positionPlayedCard(secondPlayerCardPanel, 10);
 						break;
 				case 6:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Mehdi rejoue en posant la carte B de <font color=\"red\">aire 5</font> et "
-														+ "<font color=\"red\">périmètre 12</font>.</div></html>");
+						+ "Mehdi rejoue en posant la carte B de <font color=\"red\">aire 5</font> et "
+						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 6);
 						if (sourceButton == nextButton)
 							positionPlayedCard(secondPlayerCardPanel, 8);
 						break;
 				case 7:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Mehdi rejoue en posant la carte D de aire 7 et <font color=\"red\">périmètre 12"
-														+ "</font>.</div></html>");
+						+ "Mehdi rejoue en posant la carte D de aire 7 et <font color=\"red\">périmètre 12"
+						+ "</font>.</div></html>");
 						if (sourceButton == beforeButton)
 							removeLastCard(firstPlayerCardPanel, 0);
 						if (sourceButton == nextButton)
 							positionPlayedCard(secondPlayerCardPanel, 6);
 						break;
 				case 8:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Carolina joue la carte Q de <font color=\"red\">aire 7</font> et "
-														+ "<font color=\"red\">périmètre 12</font>.</div></html>");
+						+ "Carolina joue la carte Q de <font color=\"red\">aire 7</font> et "
+						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
 						if (sourceButton == beforeButton)
 							removeLastCard(firstPlayerCardPanel, 7);
 						if (sourceButton == nextButton)
 							positionPlayedCard(firstPlayerCardPanel, 0);
 						break;
 				case 9:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Carolina rejoue en posant la carte R de <font color=\"red\">aire 7</font> et"
-														+ " <font color=\"red\">périmètre 12</font>.</div></html>");
+						+ "Carolina rejoue en posant la carte R de <font color=\"red\">aire 7</font> et"
+						+ " <font color=\"red\">périmètre 12</font>.</div></html>");
 						if (sourceButton == beforeButton)
 							removeLastCard(firstPlayerCardPanel, 4);
 						if (sourceButton == nextButton)
 							positionPlayedCard(firstPlayerCardPanel, 7);
 						break;
 				case 10: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Carolina rejoue en posant la carte X de <font color=\"red\">aire 7</font> et"
-														+ " périmètre 14.</div></html>");
+						+ "Carolina rejoue en posant la carte X de <font color=\"red\">aire 7</font> et"
+						+ " périmètre 14.</div></html>");
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 0);
 						if (sourceButton == nextButton)
 							positionPlayedCard(firstPlayerCardPanel, 4);
 						 break;
 				case 11: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														+ "Mehdi pose la carte F de <font color=\"red\">aire 7</font> et périmètre 16."
-														+ "</div></html>");
+						 + "Mehdi pose la carte F de <font color=\"red\">aire 7</font> et périmètre 16."
+						 + "</div></html>");
 						 if (sourceButton == beforeButton)
 							 removeLastCard(firstPlayerCardPanel, 10);
 						 if (sourceButton == nextButton)
 							 positionPlayedCard(secondPlayerCardPanel, 0);
 						 break;
 				case 12: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 								 + "Carolina pose la carte T de aire 8 et <font color=\"red\">périmètre 16"
-						 								 + "</font>.</div></html>");
+						 + "Carolina pose la carte T de aire 8 et <font color=\"red\">périmètre 16"
+						 + "</font>.</div></html>");
 						 if (sourceButton == beforeButton)
 							 removeLastCard(secondPlayerCardPanel, 5);
 						 if (sourceButton == nextButton)
 							 positionPlayedCard(firstPlayerCardPanel, 10);
 						 break;
 				case 13: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														 + "Mehdi pose la carte M de aire 7 et <font color=\"red\">périmètre 16</font>."
-														 + "</div></html>");
+						 + "Mehdi pose la carte M de aire 7 et <font color=\"red\">périmètre 16</font>."
+						 + "</div></html>");
 						 if (sourceButton == beforeButton) {
 							 firstPlayerPassTurnButton.setForeground(Color.RED);
 							 firstPlayerPassTurnButton.setEnabled(false);
@@ -301,16 +301,16 @@ public class TutorialGUIPerimaire extends JPanel {
 							 positionPlayedCard(secondPlayerCardPanel, 5);
 						 break;
 				case 14: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-														 + "Un joueur qui ne peut pas jouer passe son tour en appuyant le bouton "
-														 + "approprié.<br>Carolina ne peut pas jouer et passe son tour.</div></html>");
+						 + "Un joueur qui ne peut pas jouer passe son tour en appuyant le bouton "
+						 + "approprié.<br>Carolina ne peut pas jouer et passe son tour.</div></html>");
 						 firstPlayerPassTurnButton.setEnabled(true);
 						 firstPlayerPassTurnButton.setForeground(Color.RED);
 						 if (sourceButton == beforeButton)
 							 removeLastCard(secondPlayerCardPanel, 3);
 						 break;
-				case 15:  informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 								 + "Mehdi pose la carte J de <font color=\"red\">aire 7</font> et "
-						 								 + "<font color=\"red\">périmètre 16</font>, mais ne peut pas rejouer.</div></html>");
+				case 15: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+						 + "Mehdi pose la carte J de <font color=\"red\">aire 7</font> et "
+						 + "<font color=\"red\">périmètre 16</font>, mais ne peut pas rejouer.</div></html>");
 						 if (sourceButton == nextButton) {
 							 firstPlayerPassTurnButton.setForeground(Color.RED);
 							 firstPlayerPassTurnButton.setEnabled(false);
@@ -318,15 +318,15 @@ public class TutorialGUIPerimaire extends JPanel {
 						 }
 						 break;
 				case 16: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 								 + "Lucie ne peut pas jouer, la partie s'achève.<div></html>");
+						 + "Lucie ne peut pas jouer, la partie s'achève.<div></html>");
 						 break;
 				case 17: informationMessageLabel.setText("<html><div style=\"text-align: center;\">Chaque joueur compte ses cartes "
-														 + "en fin de partie et marque autant de points qu’il a de cartes.<br> "
-														 + "Dans ce cas, Carolina marque 7 points et Mehdi marque 5 points.</div></html>");
+						 + "en fin de partie et marque autant de points qu’il a de cartes.<br> "
+						 + "Dans ce cas, Carolina marque 7 points et Mehdi marque 5 points.</div></html>");
 						 break;
 				case 18: informationMessageLabel.setText("<html><div style=\"text-align: center;\">Au bout de plusieurs parties, le "
-														 + "vainqueur est celui qui totalise le plus petit nombre de points.<br>"
-														 + "</div></html>");
+						 + "vainqueur est celui qui totalise le plus petit nombre de points.<br>"
+						 + "</div></html>");
 						 break;
 				case 19: informationMessageLabel.setText("<html><div style=\"text-align: center;\">Fin du tutoriel</div></html>");
 				default: break;
