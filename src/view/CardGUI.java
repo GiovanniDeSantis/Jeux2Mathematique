@@ -45,6 +45,11 @@ public class CardGUI extends JButton {
     	setIcon(null);
     }
 
+    public void makeVisible () {
+    	ImageIcon imageIcon = new ImageIcon(id + ".png");
+    	setIcon(imageIcon);
+    }
+    
 	/**
 	 * Enable/disable the card. When disabled, the card cannot be clicked and,
 	 * consequently, cannot be played.

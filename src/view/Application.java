@@ -11,6 +11,7 @@ public class Application extends JFrame {
 	/* Identifiers of the cards associated to the Card Layout Manager */
 	final static String MAINMENU = "Main Menu";
 	final static String BOARDGAME = "Board Game";
+	final static String TUTORIAL = "Tutorial";
 	private JPanel cardsContainer, mainMenu;
 	
 	/**

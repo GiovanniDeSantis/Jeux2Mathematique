@@ -25,11 +25,19 @@ public class Player {
 		return name;
 	}
 
-	public void updateScore (int additionalScore) {
-		score += additionalScore;
-	}
-	
+	/**
+	 * Returns the score of the player.
+	 * @return the score of the player.
+	 */
 	public int getScore () {
 		return score;
+	}
+
+	/**
+	 * Updates the score of the player.
+	 * @param additionalScore - the value to sum to the current score.
+	 */
+	public void updateScore (int additionalScore) {
+		score += additionalScore;
 	}
 }

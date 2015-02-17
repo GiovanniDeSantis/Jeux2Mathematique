@@ -21,8 +21,8 @@ public class MainMenuGUI extends JPanel {
 	private Application application;
 	private Container fatherContainer;
 	private GameController gameController;
-	private JPanel newGamePanel, optionsPanel, exitPanel;
-	private JButton newGameButton, optionsButton, exitButton;
+	private JPanel newGamePanel, tutorialPanel, optionsPanel, exitPanel;
+	private JButton newGameButton, tutorialButton, optionsButton, exitButton;
 
 	/**
 	 * Class constructor.
@@ -35,10 +35,12 @@ public class MainMenuGUI extends JPanel {
 		this.fatherContainer = fatherContainer;
 		/* Panels Creation */
 		newGamePanel = new JPanel(new BorderLayout());
+		tutorialPanel = new JPanel(new BorderLayout());
 		optionsPanel = new JPanel(new BorderLayout());
 		exitPanel = new JPanel(new BorderLayout());
 		/* Buttons Creation */
 		newGameButton = new JButton("Nouvelle Partie");
+		tutorialButton = new JButton("Tutoriel");
 		optionsButton = new JButton("Options");
 		exitButton = new JButton("Sortie");
 		/* Initialization */
@@ -55,8 +57,14 @@ public class MainMenuGUI extends JPanel {
 		newGameButton.setBorderPainted(false);
 		newGameButton.setFocusable(false);
 		newGameButton.addActionListener(new NewGameListener());
+		/* Tutorial Button Handling */
+		tutorialButton.setPreferredSize(new Dimension(400, 75));
+		tutorialButton.setContentAreaFilled(false);
+		tutorialButton.setBorderPainted(false);
+		tutorialButton.setFocusable(false);
+		tutorialButton.addActionListener(new TutorialListener());
 		/* Options Button Handling */
-		optionsButton.setPreferredSize(new Dimension(400, 100));
+		optionsButton.setPreferredSize(new Dimension(400, 75));
 		optionsButton.setContentAreaFilled(false);
 		optionsButton.setBorderPainted(false);
 		optionsButton.setFocusable(false);
@@ -68,22 +76,26 @@ public class MainMenuGUI extends JPanel {
 		exitButton.setFocusable(false);
 		exitButton.addActionListener(new ExitListener());
 		/* New Game Panel Handling */
-		newGamePanel.setPreferredSize(new Dimension(400, 150));
+		newGamePanel.setPreferredSize(new Dimension(400, 100));
 		newGamePanel.add(newGameButton, BorderLayout.SOUTH);
+		/* Tutorial Panel Handling */
+		tutorialPanel.setPreferredSize(new Dimension(400, 75));
+		tutorialPanel.add(tutorialButton, BorderLayout.CENTER);
 		/* Options Panel Handling */
-		optionsPanel.setPreferredSize(new Dimension(400, 100));
+		optionsPanel.setPreferredSize(new Dimension(400, 75));
 		optionsPanel.add(optionsButton, BorderLayout.CENTER);
 		/* Exit Panel Handling */
-		exitPanel.setPreferredSize(new Dimension(400, 150));
+		exitPanel.setPreferredSize(new Dimension(400, 100));
 		exitPanel.add(exitButton, BorderLayout.NORTH);
 		/* Main Menu Handling */
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(newGamePanel);
+		add(tutorialPanel);
 		add(optionsPanel);
 		add(exitPanel);
 	}
 	
-    /* ------------------------------------ "New Game" Button Action Listener --------------------------------------- */
+    /* ------------------------------------ New Game Button Action Listener --------------------------------------- */
 	
 	/** Inner class implementing the Action Listener for the "New Game"
 	  * button.
@@ -195,7 +207,28 @@ public class MainMenuGUI extends JPanel {
 		
 	}
 	
-	/* ------------------------------------ "Options" Button Action Listener ---------------------------------------- */
+	/* ------------------------------------ Tutorial Button Action Listener ---------------------------------------- */
+
+	public class TutorialListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent action) {
+			TutorialGUIPerimaire tutorial;
+			CardLayout cardLayout;
+			
+			/* Board game initialization */
+			tutorial = new TutorialGUIPerimaire();
+			/* Adding of the board game to the CardLayout */
+			fatherContainer.add(tutorial, Application.TUTORIAL);
+			cardLayout = (CardLayout)fatherContainer.getLayout();
+			cardLayout.show(fatherContainer, Application.TUTORIAL);
+			/* Reshaping of the main frame */
+			application.pack();
+			application.setLocationRelativeTo(null);			
+		}
+	}
+	
+	/* ------------------------------------ Options Button Action Listener ---------------------------------------- */
 	
 	/** Inner class implementing the Action Listener for the "Options"
 	  * button.
@@ -209,7 +242,7 @@ public class MainMenuGUI extends JPanel {
 
 	}
 	
-	/* ------------------------------------ "Exit" Button Action Listener ------------------------------------------ */
+	/* ------------------------------------ Exit Button Action Listener ------------------------------------------ */
 
 	
 	/** Inner class implementing the Action Listener for the "Exit"

@@ -47,6 +47,11 @@ public class GameState {
 		return shuffledDeck;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public boolean handlePlayedCard (String id) {
 		boolean moveValidity = true;
 		Card playedCard = deck.getCard(id);
