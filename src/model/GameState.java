@@ -28,7 +28,7 @@ public class GameState {
 		/* Creation of the players taking part to the game */
 		players = new ArrayList<Player>();
 		for (String name : playersNames) {
-			players.add(new Player(name));
+			players.add(new Player(name, (PERIMAIRE_DECK_DIMENSION/playersNames.length)));
 		}
 		/* Initialization of the last played card */
 		lastPlayedCard = null;
@@ -69,5 +69,29 @@ public class GameState {
 		}
 		
 		return moveValidity;
+	}
+	
+	public void updatePlayerScore (String name, int increment) {
+		for (Player player : players)
+			if (player.getName().equals(name))
+				player.updateScore(increment);
+	}
+	
+	public ArrayList<String> findWinners (int numberOfPlayers) {
+		int winningScore = (PERIMAIRE_DECK_DIMENSION / numberOfPlayers) + 1;
+		ArrayList<String> winnerPlayers = new ArrayList<String>();
+		
+		for (Player player : players) {
+			int currentPlayerScore = player.getScore();
+			if (currentPlayerScore <= winningScore) {
+				winningScore = currentPlayerScore;
+			}
+		}
+		
+		for (Player player : players)
+			if (player.getScore() == winningScore)
+				winnerPlayers.add(player.getName());
+		
+		return winnerPlayers;
 	}
 }

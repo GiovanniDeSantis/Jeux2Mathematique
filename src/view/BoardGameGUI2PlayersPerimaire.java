@@ -6,11 +6,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Stack;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import controller.GameController;
 import model.GameState;
@@ -27,11 +29,13 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	
 	private static final long serialVersionUID = 1L;
 	private GameController gameController;
+	private int firstPlayerScore, secondPlayerScore, stuckGameCondition;
 	private JButton firstPlayerPassTurnButton, secondPlayerPassTurnButton;
 	private JPanel firstPlayerPanel, secondPlayerPanel, centralPanel;
-	private JPanel firstPlayerCardPanel, secondPlayerCardPanel;
-	private JLabel firstPlayerLabel, secondPlayerLabel, firstToPlayLabel, informationMessageLabel;
+	private JPanel firstPlayerCardPanel, secondPlayerCardPanel, centralCardPanel;
+	private JLabel firstPlayerNameLabel, secondPlayerNameLabel, firstPlayerScoreLabel, secondPlayerScoreLabel, informationMessageLabel;
 	private Stack<CardGUI> deck;
+	private String firstPlayerName, secondPlayerName;
 
 	/**
 	 * Class constructor.
@@ -41,30 +45,37 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		super();
 		/* Member Data Initialization */
 		this.gameController = gameController;
+		firstPlayerScore = 12;
+		secondPlayerScore = 12;
+		stuckGameCondition = 0;
+		firstPlayerName = playersNames[0];
+		secondPlayerName = playersNames[1];
 		/* Button Initialization */
 		firstPlayerPassTurnButton = new JButton("Passe Tour");
 		secondPlayerPassTurnButton = new JButton("Passe Tour");
 		/* Labels Creation */
-		firstPlayerLabel = new JLabel("Jeu de " + playersNames[0]);
-		secondPlayerLabel = new JLabel("Jeu de " + playersNames[1]);
-		firstToPlayLabel = new JLabel();
+		firstPlayerNameLabel = new JLabel("Jeu de " + firstPlayerName);
+		secondPlayerNameLabel = new JLabel("Jeu de " + secondPlayerName);
+		firstPlayerScoreLabel = new JLabel("Score: " + firstPlayerScore);
+		secondPlayerScoreLabel = new JLabel("Score: " + secondPlayerScore);
 		informationMessageLabel = new JLabel();
 		/* Panels Creation */
 		firstPlayerCardPanel = new JPanel(new GridBagLayout());
+		centralCardPanel = new JPanel(new GridBagLayout());
 		secondPlayerCardPanel = new JPanel(new GridBagLayout());
 		firstPlayerPanel = new JPanel();
-		centralPanel = new JPanel(new GridBagLayout());
+		centralPanel = new JPanel();
 		secondPlayerPanel = new JPanel();
 		/* Cards Creation */
 		deck = new Stack<CardGUI>();
 		for (int i = 0; i < GameState.PERIMAIRE_DECK_DIMENSION; i++)
 			deck.push(new CardGUI(shuffledDeck[i]));
 		/* Initialization */
-		init(playersNames, firstToPlay);
+		init(firstToPlay);
 	}
 	
 	@Override
-	protected void init (String[] playersNames, int firstToPlay) {
+	protected void init (int firstToPlay) {
 		/* Button Handling */
 		firstPlayerPassTurnButton.setPreferredSize(new Dimension(115, 20));
 		firstPlayerPassTurnButton.setBorderPainted(false);
@@ -76,18 +87,22 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		secondPlayerPassTurnButton.setContentAreaFilled(false);
 		secondPlayerPassTurnButton.setFocusable(false);
 		secondPlayerPassTurnButton.addActionListener(new PassTurnButtonListener());
-		/* First Player Label Handling */
-		firstPlayerLabel.setPreferredSize(new Dimension(300,20));
-		firstPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* Second Player Label Handling */
-		secondPlayerLabel.setPreferredSize(new Dimension(300,20));
-		secondPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* First to Play Label Handling */
-		firstToPlayLabel.setPreferredSize(new Dimension(260, 80));
-		firstToPlayLabel.setHorizontalAlignment(JLabel.CENTER);
+		/* First Player Name Label Handling */
+		firstPlayerNameLabel.setPreferredSize(new Dimension(120,20));
+		firstPlayerNameLabel.setHorizontalAlignment(JLabel.RIGHT);
+		/* Second Player Name Label Handling */
+		secondPlayerNameLabel.setPreferredSize(new Dimension(120,20));
+		secondPlayerNameLabel.setHorizontalAlignment(JLabel.RIGHT);
+		/* First Player Score Label Handling */
+		firstPlayerScoreLabel.setPreferredSize(new Dimension(120, 20));
+		firstPlayerScoreLabel.setHorizontalAlignment(JLabel.CENTER);
+		/* Second Player Score Label Handling */
+		secondPlayerScoreLabel.setPreferredSize(new Dimension(120, 20));
+		secondPlayerScoreLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* Information Message Label Handling */
-		informationMessageLabel.setPreferredSize(new Dimension(260, 80));
+		informationMessageLabel.setPreferredSize(new Dimension(260, 100));
 		informationMessageLabel.setHorizontalAlignment(JLabel.CENTER);
+		informationMessageLabel.setVerticalAlignment(JLabel.TOP);
 		/* Player Card Panels Handling */
 		/* This switch is used to handle the initial distribution
 		 * of the cards; it is performed on the basis of the order
@@ -97,30 +112,31 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 			case 1: configurePlayerCardPanel(firstPlayerCardPanel);
 					configurePlayerCardPanel(secondPlayerCardPanel);
 					enablePlayerPanel(secondPlayerCardPanel, false);
-					firstToPlayLabel.setText("Le premier joueur sera: " + playersNames[0]);
+					informationMessageLabel.setText("Le premier joueur sera: " + firstPlayerName);
 					break;
 			case 2: configurePlayerCardPanel(secondPlayerCardPanel);
 					configurePlayerCardPanel(firstPlayerCardPanel);
 					enablePlayerPanel(firstPlayerCardPanel, false);
-					firstToPlayLabel.setText("Le premier joueur sera: " + playersNames[1]);
+					informationMessageLabel.setText("Le premier joueur sera: " + secondPlayerName);
 					break;
 			default: break;
 		}
+		/* Central Card Panel Handling */
+		centralCardPanel.setPreferredSize(new Dimension(260, 410));
 		/* First Player Panel Handling */
 		firstPlayerPanel.setPreferredSize(new Dimension(300, 510));
-		firstPlayerPanel.add(firstPlayerLabel);
+		firstPlayerPanel.add(firstPlayerNameLabel);
+		firstPlayerPanel.add(firstPlayerScoreLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
 		firstPlayerPanel.add(firstPlayerPassTurnButton);
 		/* Central Panel Handling */
-		centralPanel.setPreferredSize(new Dimension(260, 490));
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridx = 0;
-		constraints.gridwidth = 4;
-		centralPanel.add(informationMessageLabel, constraints, 0);
-		centralPanel.add(firstToPlayLabel);
+		centralPanel.setPreferredSize(new Dimension(260, 510));
+		centralPanel.add(centralCardPanel);
+		centralPanel.add(informationMessageLabel);
 		/* Second Player Panel Handling */
 		secondPlayerPanel.setPreferredSize(new Dimension(300, 510));
-		secondPlayerPanel.add(secondPlayerLabel);
+		secondPlayerPanel.add(secondPlayerNameLabel);
+		secondPlayerPanel.add(secondPlayerScoreLabel);
 		secondPlayerPanel.add(secondPlayerCardPanel);
 		secondPlayerPanel.add(secondPlayerPassTurnButton);
 		/* Board Panel Handling */
@@ -187,11 +203,6 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 
 		@Override
 		public void actionPerformed(ActionEvent action) {
-			/* If present, removal of the firstToPlayLabel from the centralPanel */
-			if (firstToPlayLabel.isShowing()) {
-				firstToPlayLabel.setVisible(false);
-				centralPanel.remove(firstToPlayLabel);
-			}
 			/* If present, removal of the text contained in the informationMessageLabel */
 			if (! informationMessageLabel.getText().isEmpty())
 				informationMessageLabel.setText("");
@@ -206,23 +217,27 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 			} 
 			/* Valid move: positioning of the played card in the centralPanel */
 			else {
+				stuckGameCondition = 0;
 				playedCard.setEnabled(false);
-				positionPlayedCard(centralPanel, action);
+				positionPlayedCard(centralCardPanel, action);
 				/* Enabling and disabling of the card panels 
 				 * for the handling of the players' turns
 				 */
 				if (playedCardContainer == firstPlayerCardPanel) {
+					firstPlayerScore--;
+					gameController.updatePlayerScore(firstPlayerName, -1);
+					firstPlayerScoreLabel.setText("Score: " + firstPlayerScore);
 					enablePlayerPanel(firstPlayerCardPanel, false);
 					enablePlayerPanel(secondPlayerCardPanel, true);
 				}
 				else {
+					secondPlayerScore--;
+					gameController.updatePlayerScore(secondPlayerName, -1);
+					secondPlayerScoreLabel.setText("Score: " + secondPlayerScore);
 					enablePlayerPanel(secondPlayerCardPanel, false);
 					enablePlayerPanel(firstPlayerCardPanel, true);				
 				}
 			}
-			/* End of Game Handling */
-			if (playedCardContainer.getComponentCount() == 0)
-				informationMessageLabel.setText("Jeu terminé");
 		}
 
 	}
@@ -233,22 +248,44 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	  */
 	public class PassTurnButtonListener implements ActionListener {
 
+		private Timer timer;
+		
+		public PassTurnButtonListener () {
+			timer = new Timer(2000, new TimerListener());
+			timer.setRepeats(false);			
+		}
+		
 		@Override
-		public void actionPerformed(ActionEvent action) {
-			/* If present, removal of the firstToPlayLabel from the centralPanel */
-			if (firstToPlayLabel.isShowing()) {
-				firstToPlayLabel.setVisible(false);
-				centralPanel.remove(firstToPlayLabel);
-			}
-			JButton clickedButton = (JButton)action.getSource();
-			Container buttonContainer = clickedButton.getParent();
-			if (buttonContainer == firstPlayerPanel) {
-				enablePlayerPanel(firstPlayerCardPanel, false);
-				enablePlayerPanel(secondPlayerCardPanel, true);
+		public void actionPerformed (ActionEvent action) {
+			stuckGameCondition++;
+			/* End Game Condition */
+			if (stuckGameCondition == 2) {
+				informationMessageLabel.setText("Aucun joueur peut faire un mouvement. La partie termine");
+				timer.start();
 			} else {
-				enablePlayerPanel(secondPlayerCardPanel, false);
-				enablePlayerPanel(firstPlayerCardPanel, true);
+				/* Normal Game Condition - Passing Turns */
+				JButton clickedButton = (JButton)action.getSource();
+				Container buttonContainer = clickedButton.getParent();
+				if (buttonContainer == firstPlayerPanel) {
+					enablePlayerPanel(firstPlayerCardPanel, false);
+					enablePlayerPanel(secondPlayerCardPanel, true);
+				} else {
+					enablePlayerPanel(secondPlayerCardPanel, false);
+					enablePlayerPanel(firstPlayerCardPanel, true);
+				}
 			}
+		}
+		
+		/* ------------------------------------------------------------------ */
+		
+		public class TimerListener implements ActionListener {
+			
+			@Override
+			public void actionPerformed (ActionEvent action) {
+				informationMessageLabel.setText("A gangé mammt.");
+				timer.stop();
+			}
+			
 		}
 	
 	}

@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.ArrayList;
+
 import model.GameState;
 
 /**
@@ -26,5 +28,13 @@ public class GameController {
 	
 	public boolean handlePlayedCard (String id) {
 		return gameState.handlePlayedCard(id);
+	}
+	
+	public void updatePlayerScore (String name, int increment) {
+		gameState.updatePlayerScore(name, increment);
+	}
+	
+	public ArrayList<String> findWinners (int numberOfPlayers) {
+		return gameState.findWinners(numberOfPlayers);
 	}
 }

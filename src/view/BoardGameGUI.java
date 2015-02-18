@@ -19,7 +19,7 @@ public class BoardGameGUI extends JPanel {
 	/**
 	 * Initializes the BoardGameGUI.
 	 */
-	protected void init (String[] playersNames, int firstToPlay) {
+	protected void init (int firstToPlay) {
 		
 	}
 	

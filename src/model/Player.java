@@ -12,9 +12,9 @@ public class Player {
 	 * Class constructor.
 	 * @param name - the name associated to the player.
 	 */
-	public Player (String name) {
+	public Player (String name, int score) {
 		this.name = name;
-		score = 0;
+		this.score = score;
 	}
 	
 	/**
@@ -35,9 +35,9 @@ public class Player {
 
 	/**
 	 * Updates the score of the player.
-	 * @param additionalScore - the value to sum to the current score.
+	 * @param increment - the value to sum to the current score.
 	 */
-	public void updateScore (int additionalScore) {
-		score += additionalScore;
+	public void updateScore (int increment) {
+		score += increment;
 	}
 }

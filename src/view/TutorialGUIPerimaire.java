@@ -23,31 +23,35 @@ import model.GameState;
 public class TutorialGUIPerimaire extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-	private int tutorialPhase = 0;
+	private int tutorialPhase;
 	private JButton firstPlayerPassTurnButton, secondPlayerPassTurnButton, beforeButton, nextButton;
 	private JPanel upperPanel, lowerPanel;
 	private JPanel firstPlayerPanel, secondPlayerPanel, centralPanel;
 	private JPanel firstPlayerCardPanel, secondPlayerCardPanel, centralCardPanel;
-	private JLabel firstPlayerLabel, secondPlayerLabel, informationMessageLabel;
+	private JLabel firstPlayerNameLabel, secondPlayerNameLabel, firstPlayerScoreLabel, secondPlayerScoreLabel, informationMessageLabel;
 	private Stack<CardGUI> deck;
 
 	/**
 	 * Class constructor.
 	 */
 	public TutorialGUIPerimaire () {
+		/* Data Initialization */
+		tutorialPhase = 0;
 		/* Button Creation */
 		firstPlayerPassTurnButton = new JButton("Passe Tour");
 		secondPlayerPassTurnButton = new JButton("Passe Tour");
 		beforeButton = new JButton("Avant");
 		nextButton = new JButton("Prochain");
 		/* Labels Creation */
-		firstPlayerLabel = new JLabel("Jeu de Carolina");
-		secondPlayerLabel = new JLabel("Jeu de Mehdi");
+		firstPlayerNameLabel = new JLabel("Jeu de Carolina");
+		secondPlayerNameLabel = new JLabel("Jeu de Mehdi");
+		firstPlayerScoreLabel = new JLabel("Score: " + 12);
+		secondPlayerScoreLabel = new JLabel("Score: " + 12);
 		informationMessageLabel = new JLabel();
 		/* Panels Creation */
 		firstPlayerCardPanel = new JPanel(new GridBagLayout());
-		secondPlayerCardPanel = new JPanel(new GridBagLayout());
 		centralCardPanel = new JPanel(new GridBagLayout());
+		secondPlayerCardPanel = new JPanel(new GridBagLayout());
 		firstPlayerPanel = new JPanel();
 		centralPanel = new JPanel();
 		secondPlayerPanel = new JPanel();
@@ -83,17 +87,21 @@ public class TutorialGUIPerimaire extends JPanel {
 		nextButton.setContentAreaFilled(false);
 		nextButton.setFocusable(false);
 		nextButton.addActionListener(new TutorialButtonListener());
-		/* First Player Label Handling */
-		firstPlayerLabel.setPreferredSize(new Dimension(300,20));
-		firstPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* Second Player Label Handling */
-		secondPlayerLabel.setPreferredSize(new Dimension(300,20));
-		secondPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
+		/* First Player Name Label Handling */
+		firstPlayerNameLabel.setPreferredSize(new Dimension(120,20));
+		firstPlayerNameLabel.setHorizontalAlignment(JLabel.RIGHT);
+		/* Second Player Name Label Handling */
+		secondPlayerNameLabel.setPreferredSize(new Dimension(120,20));
+		secondPlayerNameLabel.setHorizontalAlignment(JLabel.RIGHT);
+		/* First Player Score Label Handling */
+		firstPlayerScoreLabel.setPreferredSize(new Dimension(120, 20));
+		firstPlayerScoreLabel.setHorizontalAlignment(JLabel.CENTER);
+		/* Second Player Score Label Handling */
+		secondPlayerScoreLabel.setPreferredSize(new Dimension(120, 20));
+		secondPlayerScoreLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* Information Message Label Handling */
 		Dimension informationMessageLabelDimension = new Dimension(550, 50);
-		informationMessageLabel.setMinimumSize(informationMessageLabelDimension);
 		informationMessageLabel.setPreferredSize(informationMessageLabelDimension);
-		informationMessageLabel.setMaximumSize(informationMessageLabelDimension);
 		informationMessageLabel.setHorizontalAlignment(JLabel.CENTER);
 		informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 				+ "Ce jeu consiste à empiler des cartes par égalités d'aires et de périmètres."
@@ -105,7 +113,8 @@ public class TutorialGUIPerimaire extends JPanel {
 		centralCardPanel.setPreferredSize(new Dimension(260, 490));
 		/* First Player Panel Handling */
 		firstPlayerPanel.setPreferredSize(new Dimension(300, 510));
-		firstPlayerPanel.add(firstPlayerLabel);
+		firstPlayerPanel.add(firstPlayerNameLabel);
+		firstPlayerPanel.add(firstPlayerScoreLabel);
 		firstPlayerPanel.add(firstPlayerCardPanel);
 		firstPlayerPanel.add(firstPlayerPassTurnButton);
 		enablePlayerPanel(firstPlayerCardPanel, false);
@@ -114,7 +123,8 @@ public class TutorialGUIPerimaire extends JPanel {
 		centralPanel.add(centralCardPanel);
 		/* Second Player Panel Handling */
 		secondPlayerPanel.setPreferredSize(new Dimension(300, 510));
-		secondPlayerPanel.add(secondPlayerLabel);
+		secondPlayerPanel.add(secondPlayerNameLabel);
+		secondPlayerPanel.add(secondPlayerScoreLabel);
 		secondPlayerPanel.add(secondPlayerCardPanel);
 		secondPlayerPanel.add(secondPlayerPassTurnButton);
 		enablePlayerPanel(secondPlayerCardPanel, false);
@@ -212,6 +222,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 3: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						+ "Carolina joue la carte P de aire 5 et périmètre 12.<br> Le joueur "
 						+ "suivant doit poser sur la carte précédente une carte de son jeu.</div></html>");
+						firstPlayerScoreLabel.setText("Score: " + 11);
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 7);
 						if (sourceButton == nextButton)
@@ -221,6 +232,7 @@ public class TutorialGUIPerimaire extends JPanel {
 						+ "Mehdi joue la carte H de <font color=\"red\">aire 5</font> et "
 						+ "<font color=\"red\">périmètre 12</font>.<br>Poser une carte représentant"
 						+ " une figure de même aire et de même périmètre permet de rejouer.</div></html>");
+						secondPlayerScoreLabel.setText("Score: " + 11);
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 10);
 						if (sourceButton == nextButton)
@@ -229,6 +241,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 5: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						+ "Mehdi rejoue en posant la carte N de <font color=\"red\">aire 5</font> et "
 						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
+						secondPlayerScoreLabel.setText("Score: " + 10);
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 8);
 						if (sourceButton == nextButton)
@@ -237,6 +250,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 6:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						+ "Mehdi rejoue en posant la carte B de <font color=\"red\">aire 5</font> et "
 						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
+						secondPlayerScoreLabel.setText("Score: " + 9);
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 6);
 						if (sourceButton == nextButton)
@@ -245,6 +259,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 7:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						+ "Mehdi rejoue en posant la carte D de aire 7 et <font color=\"red\">périmètre 12"
 						+ "</font>.</div></html>");
+						secondPlayerScoreLabel.setText("Score: " + 8);
 						if (sourceButton == beforeButton)
 							removeLastCard(firstPlayerCardPanel, 0);
 						if (sourceButton == nextButton)
@@ -253,6 +268,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 8:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						+ "Carolina joue la carte Q de <font color=\"red\">aire 7</font> et "
 						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
+						firstPlayerScoreLabel.setText("Score: " + 10);
 						if (sourceButton == beforeButton)
 							removeLastCard(firstPlayerCardPanel, 7);
 						if (sourceButton == nextButton)
@@ -261,6 +277,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 9:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						+ "Carolina rejoue en posant la carte R de <font color=\"red\">aire 7</font> et"
 						+ " <font color=\"red\">périmètre 12</font>.</div></html>");
+						firstPlayerScoreLabel.setText("Score: " + 9);
 						if (sourceButton == beforeButton)
 							removeLastCard(firstPlayerCardPanel, 4);
 						if (sourceButton == nextButton)
@@ -269,6 +286,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 10: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						+ "Carolina rejoue en posant la carte X de <font color=\"red\">aire 7</font> et"
 						+ " périmètre 14.</div></html>");
+						firstPlayerScoreLabel.setText("Score: " + 8);
 						if (sourceButton == beforeButton)
 							removeLastCard(secondPlayerCardPanel, 0);
 						if (sourceButton == nextButton)
@@ -277,6 +295,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 11: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						 + "Mehdi pose la carte F de <font color=\"red\">aire 7</font> et périmètre 16."
 						 + "</div></html>");
+						 secondPlayerScoreLabel.setText("Score: " + 7);
 						 if (sourceButton == beforeButton)
 							 removeLastCard(firstPlayerCardPanel, 10);
 						 if (sourceButton == nextButton)
@@ -285,6 +304,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 12: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						 + "Carolina pose la carte T de aire 8 et <font color=\"red\">périmètre 16"
 						 + "</font>.</div></html>");
+						 firstPlayerScoreLabel.setText("Score: " + 7);
 						 if (sourceButton == beforeButton)
 							 removeLastCard(secondPlayerCardPanel, 5);
 						 if (sourceButton == nextButton)
@@ -293,6 +313,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 13: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						 + "Mehdi pose la carte M de aire 7 et <font color=\"red\">périmètre 16</font>."
 						 + "</div></html>");
+						 secondPlayerScoreLabel.setText("Score: " + 6);
 						 if (sourceButton == beforeButton) {
 							 firstPlayerPassTurnButton.setForeground(Color.RED);
 							 firstPlayerPassTurnButton.setEnabled(false);
@@ -311,6 +332,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 15: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
 						 + "Mehdi pose la carte J de <font color=\"red\">aire 7</font> et "
 						 + "<font color=\"red\">périmètre 16</font>, mais ne peut pas rejouer.</div></html>");
+						 secondPlayerScoreLabel.setText("Score: " + 5);
 						 if (sourceButton == nextButton) {
 							 firstPlayerPassTurnButton.setForeground(Color.RED);
 							 firstPlayerPassTurnButton.setEnabled(false);
@@ -318,7 +340,7 @@ public class TutorialGUIPerimaire extends JPanel {
 						 }
 						 break;
 				case 16: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 + "Lucie ne peut pas jouer, la partie s'achève.<div></html>");
+						 + "Carolina ne peut pas jouer, la partie s'achève.<div></html>");
 						 break;
 				case 17: informationMessageLabel.setText("<html><div style=\"text-align: center;\">Chaque joueur compte ses cartes "
 						 + "en fin de partie et marque autant de points qu’il a de cartes.<br> "
