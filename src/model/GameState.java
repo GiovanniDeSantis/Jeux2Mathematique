@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -77,21 +78,8 @@ public class GameState {
 				player.updateScore(increment);
 	}
 	
-	public ArrayList<String> findWinners (int numberOfPlayers) {
-		int winningScore = (PERIMAIRE_DECK_DIMENSION / numberOfPlayers) + 1;
-		ArrayList<String> winnerPlayers = new ArrayList<String>();
-		
-		for (Player player : players) {
-			int currentPlayerScore = player.getScore();
-			if (currentPlayerScore <= winningScore) {
-				winningScore = currentPlayerScore;
-			}
-		}
-		
-		for (Player player : players)
-			if (player.getScore() == winningScore)
-				winnerPlayers.add(player.getName());
-		
-		return winnerPlayers;
+	public ArrayList<Player> getResults () {
+		Collections.sort(players);
+		return (ArrayList<Player>)players;
 	}
 }

@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import model.GameState;
+import model.Player;
 
 /**
  * Class that handles the interactions between the View and the Model.
@@ -34,7 +35,7 @@ public class GameController {
 		gameState.updatePlayerScore(name, increment);
 	}
 	
-	public ArrayList<String> findWinners (int numberOfPlayers) {
-		return gameState.findWinners(numberOfPlayers);
+	public ArrayList<Player> getResults () {
+		return gameState.getResults();
 	}
 }

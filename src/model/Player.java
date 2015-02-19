@@ -4,7 +4,7 @@ package model;
  * Class that models a player of the board game.
  * @author Giovanni De Santis, Rafael Garcia.
  */
-public class Player {
+public class Player implements Comparable<Player> {
 	private String name;
 	private int score;
 	
@@ -39,5 +39,15 @@ public class Player {
 	 */
 	public void updateScore (int increment) {
 		score += increment;
+	}
+
+	@Override
+	public int compareTo(Player player) {
+		if (score < player.getScore())
+			return -1;
+		else if (score > player.getScore())
+			return 1;
+		else
+			return 0;
 	}
 }
