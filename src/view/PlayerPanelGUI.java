@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,9 +24,10 @@ public class PlayerPanelGUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private int playerScore;
-	private JLabel nameLabel, scoreLabel;
+	private JLabel headerLabel;
 	private JPanel cardsPanel;
 	private JButton passTurnButton;
+	private String playerName;
 	
 	/**
 	 * Class Construction.
@@ -34,10 +36,10 @@ public class PlayerPanelGUI extends JPanel {
 	 */
 	public PlayerPanelGUI (String playerName, int playerScore) {
 		/* Member Data Initialization */
+		this.playerName = playerName;
 		this.playerScore = playerScore;
 		/* User Interface's Components Creation */
-		nameLabel = new JLabel("Jeu de " + playerName);
-		scoreLabel = new JLabel("Score: " + playerScore);
+		headerLabel = new JLabel("Jeu de " + playerName + "      Score: " + playerScore);
 		cardsPanel = new JPanel(new GridBagLayout());
 		passTurnButton = new JButton("Passe Tour");
 		/* User Interface Initialization */
@@ -48,17 +50,14 @@ public class PlayerPanelGUI extends JPanel {
 	 * Initializes the User Interface.
 	 */
 	private void initialize () {
-		/* Name Label Handling */
-		nameLabel.setHorizontalAlignment(JLabel.RIGHT);
-		/* Score Label Handling */
-		scoreLabel.setHorizontalAlignment(JLabel.CENTER);
+		/* Header Label Handling */
+		headerLabel.setHorizontalAlignment(JLabel.CENTER);
 		/* Pass Turn Button Handling */
 		passTurnButton.setBorderPainted(false);
 		passTurnButton.setContentAreaFilled(false);
 		passTurnButton.setFocusable(false);
 		/* Player Panel Handling */
-		add(nameLabel);
-		add(scoreLabel);
+		add(headerLabel);
 		add(cardsPanel);
 		add(passTurnButton);
 	}
@@ -81,21 +80,12 @@ public class PlayerPanelGUI extends JPanel {
 	}
 	
 	/**
-	 * Sets the size of the label containing the name of the player.
+	 * Sets the size of the label containing the name and the score of the player.
 	 * @param width - the width to be assigned to the label.
 	 * @param height - the height to be assigned to the label.
 	 */
-	public void setNameLabelSize (int width, int height) {
-		nameLabel.setPreferredSize(new Dimension(width, height));
-	}
-	
-	/**
-	 * Sets the size of the label containing the current score of the player.
-	 * @param width - the width to be assigned to the label.
-	 * @param height - the height to be assigned to the label.
-	 */
-	public void setScoreLabelSize (int width, int height) {
-		scoreLabel.setPreferredSize(new Dimension(width, height));
+	public void setHeaderLabelSize (int width, int height) {
+		headerLabel.setPreferredSize(new Dimension(width, height));
 	}
 	
 	/**
@@ -104,7 +94,7 @@ public class PlayerPanelGUI extends JPanel {
 	 */
 	public void updateScore (int increment) {
 		playerScore = playerScore + increment;
-		scoreLabel.setText("Score: " + playerScore);
+		headerLabel.setText("Jeu de " + playerName + "      Score: " + playerScore);
 	}
 	
 	/**
@@ -116,31 +106,82 @@ public class PlayerPanelGUI extends JPanel {
 		cardsPanel.setPreferredSize(new Dimension(width, height));
 	}
 	
+	/* ------------ To Correct ------------- */
+	/**
+	 * 
+	 * @param cardToRestore
+	 */
+	public void restoreCard (int cardToRestore) {
+		CardGUI card = (CardGUI)cardsPanel.getComponent(cardToRestore); //TODO To correct.
+		card.makeVisible();
+	}
+	
+	/**
+	 * 
+	 * @param cardToPlay
+	 */
+	public CardGUI getCardToPlay (int cardToPlay) {
+		CardGUI card = (CardGUI)cardsPanel.getComponent(cardToPlay);
+		card.setEnabled(false);
+		
+		return card;
+	}
+	
+	/* --------------------------------------------- */
+	
 	/**
 	 * Distributes in the appropriate panel the cards which have to be assigned to the player.
 	 * The cards are put in the cells of a matrix composed by a number of rows and columns which 
-	 * have to be specified.
+	 * have to be externally specified.
 	 * @param rows - the number of rows forming the matrix.
 	 * @param columns - the number of columns forming the matrix.
 	 * @param deck - the deck containing the cards which have to be assigned to the player; the 
 	 * 				 assignment is realized in a way according to which the first rows*columns 
 	 * 				 cards of the deck are distributed to the player.
+	 * @param oneLess - defines if in the last row of the matrix it has to lack the last card;
+	 * 					in this way the first ((rows*columns) - 1) cards of the deck are distributed 
+	 * 					to the player.
+	 * @param twoLess - defines if in the last row of the matrix it has to lack the last two cards;
+	 * 					in this way the first ((rows*columns) - 2) cards of the deck are distributed 
+	 * 					to the player.
 	 */
-	public void configureCardsPanel (int rows, int columns, Stack<CardGUI> deck) {
+	public void configureCardsPanel (int rows, int columns, Stack<CardGUI> deck, boolean oneLess, boolean twoLess) {		
 		GridBagConstraints constraints = new GridBagConstraints();
 		for (int i = 0; i < rows; i++)
 			for (int j = 0; j < columns; j++) {
-				CardGUI card = deck.pop();
-				constraints.gridx = j;
-				constraints.gridy = i;
-				constraints.ipadx = 13;
-				constraints.ipady = 10;
-				cardsPanel.add(card, constraints);
+				int matrixDimension = rows * columns;
+				if (oneLess) {
+					if (((i + j) + (i * 2)) != (matrixDimension - 1)) {
+						CardGUI card = deck.pop();
+						constraints.gridx = j;
+						constraints.gridy = i;
+						constraints.ipadx = 13;
+						constraints.ipady = 10;
+						cardsPanel.add(card, constraints);
+					}
+				}
+				else if (twoLess) {
+					if (((i + j) + (i * 2)) != (matrixDimension - 2)) {
+						CardGUI card = deck.pop();
+						constraints.gridx = j;
+						constraints.gridy = i;
+						constraints.ipadx = 13;
+						constraints.ipady = 10;
+						cardsPanel.add(card, constraints);
+					}
+				} else {
+					CardGUI card = deck.pop();
+					constraints.gridx = j;
+					constraints.gridy = i;
+					constraints.ipadx = 13;
+					constraints.ipady = 10;
+					cardsPanel.add(card, constraints);
+				}
 			}
 	}
 	
 	/**
-	 * Sets the size of the button allowing to the player to pass his turn.
+	 * Sets the size of the button allowing the player to pass his turn.
 	 * @param width - the width to be assigned to the button.
 	 * @param height - the height to be assigned to the button.
 	 */
@@ -149,7 +190,15 @@ public class PlayerPanelGUI extends JPanel {
 	}
 	
 	/**
-	 * Associates an Action Listener to the button used to allow to the player to pass his turn.
+	 * Sets the color of the text characterizing the pass turn button.
+	 * @param color - the color to be set.
+	 */
+	public void setButtonTextColor (Color color) {
+		passTurnButton.setForeground(color);
+	}
+	
+	/**
+	 * Associates an Action Listener to the button used to allow the player to pass his turn.
 	 * @param actionListener - the Action Listener to be assigned to the button.
 	 */
 	public void addButtonActionListener (ActionListener actionListener) {

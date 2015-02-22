@@ -57,8 +57,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	protected void initialize (int firstToPlay) {
 		/* First Player Panel Handling */
 		firstPlayer.setPreferredSize(new Dimension(300, 510));
-		firstPlayer.setNameLabelSize(120, 20);
-		firstPlayer.setScoreLabelSize(120, 20);
+		firstPlayer.setHeaderLabelSize(240, 20);
 		firstPlayer.setCardsPanelSize(300, 450);
 		firstPlayer.setButtonSize(115, 20);
 		firstPlayer.addButtonActionListener(new PassTurnButtonListener());
@@ -68,20 +67,19 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		playingPanel.setCardsPanelSize(260, 410);
 		/* Second Player Panel Handling */
 		secondPlayer.setPreferredSize(new Dimension(300, 510));
-		secondPlayer.setNameLabelSize(120, 20);
-		secondPlayer.setScoreLabelSize(120, 20);
+		secondPlayer.setHeaderLabelSize(240, 20);
 		secondPlayer.setCardsPanelSize(300, 450);
 		secondPlayer.setButtonSize(115, 20);
 		secondPlayer.addButtonActionListener(new PassTurnButtonListener());
-		/* Deck's Card Distribution Handling */		
+		/* Deck's Cards Distribution Handling */		
 		switch (firstToPlay) {
-			case 1: firstPlayer.configureCardsPanel(4, 3, deck);
-					secondPlayer.configureCardsPanel(4, 3, deck);
+			case 1: firstPlayer.configureCardsPanel(4, 3, deck, false, false);
+					secondPlayer.configureCardsPanel(4, 3, deck, false, false);
 					secondPlayer.enable(false);
 					playingPanel.setMessage("Le premier joueur sera: " + playersNames[0]);
 					break;
-			case 2: secondPlayer.configureCardsPanel(4, 3, deck);
-					firstPlayer.configureCardsPanel(4, 3, deck);
+			case 2: secondPlayer.configureCardsPanel(4, 3, deck, false, false);
+					firstPlayer.configureCardsPanel(4, 3, deck, false, false);
 					firstPlayer.enable(false);
 					playingPanel.setMessage("Le premier joueur sera: " + playersNames[1]);
 					break;
@@ -110,7 +108,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 			boolean moveValidity = gameController.handlePlayedCard(playedCard.getId());
 			Container playerPanel = playedCard.getParent().getParent();
 			/* Not valid move: notify the user that the move is not correct */
-			if (!moveValidity) {
+			if (! moveValidity) {
 				playingPanel.setMessage("Mouvement pas valable!");
 			} 
 			/* Valid move: positioning of the played card in the playing panel */
@@ -196,7 +194,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 				String rank = "";
 				for (int i = 0; i < results.size(); i++) {
 					Player player = results.get(i);
-					rank = rank.concat("" + (i + 1) + ") " + player.getName() + " - " + player.getScore() + ";<br>");
+					rank = rank.concat("" + (i + 1) + ") " + player.getName() + " - " + player.getScore() + "<br>");
 				}
 				playingPanel.setMessage("<html><div style=\"text-align: center;\">Les résultats de la partie sont:<br>"
 						+ "" + rank + "</div></html>");

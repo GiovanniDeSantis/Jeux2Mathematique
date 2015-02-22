@@ -6,13 +6,13 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import utils.Utils;
 import controller.GameController;
 
 public class MainMenuGUI extends JPanel {
@@ -115,7 +115,7 @@ public class MainMenuGUI extends JPanel {
 			/* Request of the names of the players */
 			playersNames = getPlayersNames(numberOfPlayers);
 			/* Definition of the player that will make the first move */
-			firstToPlay = randInt(1, numberOfPlayers); //TODO check if this is the right place
+			firstToPlay = Utils.randomInteger(1, numberOfPlayers); //TODO check if this is the right place
 			/* Creation of the game */
 			gameController = new GameController(playersNames);
 			/* Retrieval of the shuffled deck */
@@ -128,7 +128,7 @@ public class MainMenuGUI extends JPanel {
 			cardLayout.show(fatherContainer, Application.BOARDGAME);
 			/* Reshaping of the main frame */
 			application.pack();
-			application.setLocationRelativeTo(null);			
+			application.setLocationRelativeTo(null);
 		}
 		
 		/**
@@ -165,19 +165,6 @@ public class MainMenuGUI extends JPanel {
 			}
 		
 			return playersNames;
-		}
-		
-		/**
-		 * Computes a random integer in a generic interval.
-		 * @param min - the minimum value of the generic interval.
-		 * @param max - the maximum value of the generic interval.
-		 * @return a random integer in the interval [min, max].
-		 */
-		private int randInt (int min, int max) {
-			Random random = new Random();
-		    int randomNumber = random.nextInt((max - min) + 1) + min;
-
-		    return randomNumber;
 		}
 		
 		/**

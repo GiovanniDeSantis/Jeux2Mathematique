@@ -2,15 +2,10 @@ package view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 import java.util.Stack;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import model.GameState;
@@ -24,370 +19,333 @@ public class TutorialGUIPerimaire extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private int tutorialPhase;
-	private JButton firstPlayerPassTurnButton, secondPlayerPassTurnButton, beforeButton, nextButton;
 	private JPanel upperPanel, lowerPanel;
-	private JPanel firstPlayerPanel, secondPlayerPanel, centralPanel;
-	private JPanel firstPlayerCardPanel, secondPlayerCardPanel, centralCardPanel;
-	private JLabel firstPlayerNameLabel, secondPlayerNameLabel, firstPlayerScoreLabel, secondPlayerScoreLabel, informationMessageLabel;
-	private Stack<CardGUI> deck;
+	private PlayerPanelGUI firstPlayer, secondPlayer;
+	private PlayingPanelGUI playingPanel;
+	private Stack<CardGUI> deck;	
+	private TutorialInformationPanelGUI informationPanel;
 
 	/**
 	 * Class constructor.
 	 */
 	public TutorialGUIPerimaire () {
-		/* Data Initialization */
+		/* Member Data Initialization */
 		tutorialPhase = 0;
-		/* Button Creation */
-		firstPlayerPassTurnButton = new JButton("Passe Tour");
-		secondPlayerPassTurnButton = new JButton("Passe Tour");
-		beforeButton = new JButton("Avant");
-		nextButton = new JButton("Prochain");
-		/* Labels Creation */
-		firstPlayerNameLabel = new JLabel("Jeu de Carolina");
-		secondPlayerNameLabel = new JLabel("Jeu de Mehdi");
-		firstPlayerScoreLabel = new JLabel("Score: " + 12);
-		secondPlayerScoreLabel = new JLabel("Score: " + 12);
-		informationMessageLabel = new JLabel();
 		/* Panels Creation */
-		firstPlayerCardPanel = new JPanel(new GridBagLayout());
-		centralCardPanel = new JPanel(new GridBagLayout());
-		secondPlayerCardPanel = new JPanel(new GridBagLayout());
-		firstPlayerPanel = new JPanel();
-		centralPanel = new JPanel();
-		secondPlayerPanel = new JPanel();
+		firstPlayer = new PlayerPanelGUI("Carolina", 12);
+		playingPanel = new PlayingPanelGUI();
+		secondPlayer = new PlayerPanelGUI("Mehdi", 12);
+		informationPanel = new TutorialInformationPanelGUI();
 		upperPanel = new JPanel();
 		lowerPanel = new JPanel();
-		/* Cards Creation */
+		/* Deck Creation */
 		String[] tutorialDeck = {"O", "N", "W", "B", "H", "D", "M", "I", "J", "A", "S", "F",
 		"C", "T", "P", "V", "R", "K", "U", "X", "G", "E", "L", "Q"};
 		deck = new Stack<CardGUI>();
 		for (int i = 0; i < GameState.PERIMAIRE_DECK_DIMENSION; i++)
 			deck.push(new CardGUI(tutorialDeck[i]));
-		/* Initialization */
-		init();
+		/* Board Game Initialization */
+		initialize();
 	}
 	
-	protected void init () {
-		/* Button Handling */
-		firstPlayerPassTurnButton.setPreferredSize(new Dimension(115, 20));
-		firstPlayerPassTurnButton.setBorderPainted(false);
-		firstPlayerPassTurnButton.setContentAreaFilled(false);
-		firstPlayerPassTurnButton.setFocusable(false);
-		secondPlayerPassTurnButton.setPreferredSize(new Dimension(115, 20));
-		secondPlayerPassTurnButton.setBorderPainted(false);
-		secondPlayerPassTurnButton.setContentAreaFilled(false);
-		secondPlayerPassTurnButton.setFocusable(false);
-		beforeButton.setPreferredSize(new Dimension(105, 35));
-		beforeButton.setBorderPainted(false);
-		beforeButton.setContentAreaFilled(false);
-		beforeButton.setFocusable(false);
-		beforeButton.addActionListener(new TutorialButtonListener());
-		nextButton.setPreferredSize(new Dimension(105, 35));
-		nextButton.setBorderPainted(false);
-		nextButton.setContentAreaFilled(false);
-		nextButton.setFocusable(false);
-		nextButton.addActionListener(new TutorialButtonListener());
-		/* First Player Name Label Handling */
-		firstPlayerNameLabel.setPreferredSize(new Dimension(120,20));
-		firstPlayerNameLabel.setHorizontalAlignment(JLabel.RIGHT);
-		/* Second Player Name Label Handling */
-		secondPlayerNameLabel.setPreferredSize(new Dimension(120,20));
-		secondPlayerNameLabel.setHorizontalAlignment(JLabel.RIGHT);
-		/* First Player Score Label Handling */
-		firstPlayerScoreLabel.setPreferredSize(new Dimension(120, 20));
-		firstPlayerScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* Second Player Score Label Handling */
-		secondPlayerScoreLabel.setPreferredSize(new Dimension(120, 20));
-		secondPlayerScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* Information Message Label Handling */
-		Dimension informationMessageLabelDimension = new Dimension(550, 50);
-		informationMessageLabel.setPreferredSize(informationMessageLabelDimension);
-		informationMessageLabel.setHorizontalAlignment(JLabel.CENTER);
-		informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+	/**
+	 * Initialized the User Interface.
+	 */
+	protected void initialize () {
+		/* First Player Panel Handling */
+		firstPlayer.setPreferredSize(new Dimension(300, 510));
+		firstPlayer.setButtonSize(115, 20);
+		firstPlayer.setNameLabelSize(120, 20);
+		firstPlayer.setScoreLabelSize(120, 20);
+		firstPlayer.configureCardsPanel(4, 3, deck, false, false);
+		firstPlayer.enable(false);
+		/* Playing Panel Handling */
+		playingPanel.setPreferredSize(new Dimension(260, 490));
+		playingPanel.setCardsPanelSize(260, 490);
+		playingPanel.setMessageLabelSize(0, 0);
+		/* Second Player Panel Handling */
+		secondPlayer.setPreferredSize(new Dimension(300, 510));
+		secondPlayer.setButtonSize(115, 20);
+		secondPlayer.setNameLabelSize(120, 20);
+		secondPlayer.setScoreLabelSize(120, 20);
+		secondPlayer.configureCardsPanel(4, 3, deck, false, false);
+		secondPlayer.enable(false);
+		/* Upper Panel Handling */
+		upperPanel.add(firstPlayer);
+		upperPanel.add(playingPanel);
+		upperPanel.add(secondPlayer);
+		/* Information Panel Handling */
+		informationPanel.setPreferredSize(new Dimension(860, 55));
+		informationPanel.setBeforeButtonSize(105, 35);
+		informationPanel.addBeforeButtonActionListener(new BeforeButtonListener());
+		informationPanel.setNextButtonSize(105, 35);
+		informationPanel.addNextButtonActionListener(new NextButtonListener());
+		informationPanel.setMessageLabelSize(550, 50);
+		informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 				+ "Ce jeu consiste à empiler des cartes par égalités d'aires et de périmètres."
 				+ "<br>Le but est être le premier à se défaire de ses cartes</div></html>");
-		/* Player Card Panels Handling */
-		configurePlayerCardPanel(firstPlayerCardPanel);
-		configurePlayerCardPanel(secondPlayerCardPanel);
-		/* Central Card Panel Handling */
-		centralCardPanel.setPreferredSize(new Dimension(260, 490));
-		/* First Player Panel Handling */
-		firstPlayerPanel.setPreferredSize(new Dimension(300, 510));
-		firstPlayerPanel.add(firstPlayerNameLabel);
-		firstPlayerPanel.add(firstPlayerScoreLabel);
-		firstPlayerPanel.add(firstPlayerCardPanel);
-		firstPlayerPanel.add(firstPlayerPassTurnButton);
-		enablePlayerPanel(firstPlayerCardPanel, false);
-		/* Central Panel Handling */
-		centralPanel.setPreferredSize(new Dimension(260, 490));
-		centralPanel.add(centralCardPanel);
-		/* Second Player Panel Handling */
-		secondPlayerPanel.setPreferredSize(new Dimension(300, 510));
-		secondPlayerPanel.add(secondPlayerNameLabel);
-		secondPlayerPanel.add(secondPlayerScoreLabel);
-		secondPlayerPanel.add(secondPlayerCardPanel);
-		secondPlayerPanel.add(secondPlayerPassTurnButton);
-		enablePlayerPanel(secondPlayerCardPanel, false);
-		/* Upper Panel Handling */
-		upperPanel.add(firstPlayerPanel);
-		upperPanel.add(centralPanel);
-		upperPanel.add(secondPlayerPanel);
 		/* Lower Panel Handling */
-		lowerPanel.setPreferredSize(new Dimension(860, 55));
-		lowerPanel.add(beforeButton);
-		lowerPanel.add(informationMessageLabel);
-		lowerPanel.add(nextButton);
-		/* Board Panel Handling */
+		lowerPanel.setPreferredSize(new Dimension(860, 65));
+		lowerPanel.add(informationPanel);
+		/* Board Game Handling */
 		setPreferredSize(new Dimension(860, 600));
 		add(upperPanel);
 		add(lowerPanel);
 	}
 	
-	/**
-	 * Configures the generic playerCardPanel, positioning in it the necessary
-	 * cards.
-	 * @param playerCardPanel - the panel in which the cards must be positioned.
-	 */
-	private void configurePlayerCardPanel (JPanel playerCardPanel) {
-		playerCardPanel.setPreferredSize(new Dimension(300, 450));
-		CardGUI card;
-		GridBagConstraints constraints = new GridBagConstraints();
-		/* Positioning of the cards of the deck in the playerCardPanel */
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 3; j++) {
-				card = deck.pop();
-				constraints.gridx = j;
-				constraints.gridy = i;
-				constraints.ipadx = 13;
-				constraints.ipady = 10;
-				playerCardPanel.add(card, constraints);
-			}
-		}
-	}
+    /* ------------------------------------ Before Button Action Listener -------------------------------- */
 	
 	/**
-	 * 
-	 * @param playerCardPanel
-	 * @param value
+	 * Inner class implementing the action listener to be associated to the "Before Button" of the TutorialInformationPanelGUI.
+	 * @author Giovanni De Santis, Rafael Garcia.
 	 */
-	private void enablePlayerPanel (JPanel playerCardPanel, boolean value) {
-		enablePlayerCardPanel(playerCardPanel, value);
-		if (playerCardPanel == firstPlayerCardPanel)
-			firstPlayerPassTurnButton.setEnabled(value);
-		if (playerCardPanel == secondPlayerCardPanel)
-			secondPlayerPassTurnButton.setEnabled(value);
-	}
-	
-	/**
-	 * 
-	 * @param playerCardPanel
-	 * @param value
-	 */
-	private void enablePlayerCardPanel (JPanel playerCardPanel, boolean value) {
-		int numberOfComponents = playerCardPanel.getComponentCount();
-		for (int i = 0; i < (numberOfComponents); i++) {
-			CardGUI card = (CardGUI)playerCardPanel.getComponent(i);
-			card.enableCard(value);
-		}
-	}
-	
-	/*----------------------------------------------------- */
-	
-	private class TutorialButtonListener implements ActionListener {
+	private class BeforeButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed (ActionEvent action) {
-			JButton sourceButton = (JButton)action.getSource();
-			if ((sourceButton == beforeButton) && (tutorialPhase > 0))
+			if (tutorialPhase > 0)
 				tutorialPhase--;
-			if ((sourceButton == nextButton) && (tutorialPhase < 19))
-				tutorialPhase++;
 			switch (tutorialPhase) {
-				case 0: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 0: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Ce jeu consiste à empiler des cartes par égalités d'aires et de périmètres."
 						+ "<br>Le but est être le premier à se défaire de ses cartes</div></html>");
 						break;
-				case 1: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 1: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Toute carte empilée doit représenter une figure de même aire ou de même "
 						+ "périmètre que la figure de la carte du dessous.</div></html>");
 						break;
-				
-				case 2: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 2: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Le joueur désigné pour débuter la partie, retire de son jeu la carte de "
 						+ "son choix et la pose sur la table.<br>Le premier joueur est Carolina."
 						+ "</div></html>");
-						if (sourceButton == beforeButton)
-							removeLastCard(firstPlayerCardPanel, 9);
+						goToPrecedentPhase(firstPlayer, 9);
+						firstPlayer.updateScore(1);
 						break;
-				case 3: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 3: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Carolina joue la carte P de aire 5 et périmètre 12.<br> Le joueur "
 						+ "suivant doit poser sur la carte précédente une carte de son jeu.</div></html>");
-						firstPlayerScoreLabel.setText("Score: " + 11);
-						if (sourceButton == beforeButton)
-							removeLastCard(secondPlayerCardPanel, 7);
-						if (sourceButton == nextButton)
-							positionPlayedCard(firstPlayerCardPanel, 9);
+						secondPlayer.updateScore(1);
+						goToPrecedentPhase(secondPlayer, 7);
 						break;
-				case 4: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 4: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Mehdi joue la carte H de <font color=\"red\">aire 5</font> et "
 						+ "<font color=\"red\">périmètre 12</font>.<br>Poser une carte représentant"
 						+ " une figure de même aire et de même périmètre permet de rejouer.</div></html>");
-						secondPlayerScoreLabel.setText("Score: " + 11);
-						if (sourceButton == beforeButton)
-							removeLastCard(secondPlayerCardPanel, 10);
-						if (sourceButton == nextButton)
-							positionPlayedCard(secondPlayerCardPanel, 7);
+						secondPlayer.updateScore(1);
+						goToPrecedentPhase(secondPlayer, 10);
 						break;
-				case 5: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 5: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Mehdi rejoue en posant la carte N de <font color=\"red\">aire 5</font> et "
 						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
-						secondPlayerScoreLabel.setText("Score: " + 10);
-						if (sourceButton == beforeButton)
-							removeLastCard(secondPlayerCardPanel, 8);
-						if (sourceButton == nextButton)
-							positionPlayedCard(secondPlayerCardPanel, 10);
+						secondPlayer.updateScore(1);
+						goToPrecedentPhase(secondPlayer, 8);
 						break;
-				case 6:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 6:	informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Mehdi rejoue en posant la carte B de <font color=\"red\">aire 5</font> et "
 						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
-						secondPlayerScoreLabel.setText("Score: " + 9);
-						if (sourceButton == beforeButton)
-							removeLastCard(secondPlayerCardPanel, 6);
-						if (sourceButton == nextButton)
-							positionPlayedCard(secondPlayerCardPanel, 8);
+						secondPlayer.updateScore(1);
+						goToPrecedentPhase(secondPlayer, 6);
 						break;
-				case 7:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 7:	informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Mehdi rejoue en posant la carte D de aire 7 et <font color=\"red\">périmètre 12"
 						+ "</font>.</div></html>");
-						secondPlayerScoreLabel.setText("Score: " + 8);
-						if (sourceButton == beforeButton)
-							removeLastCard(firstPlayerCardPanel, 0);
-						if (sourceButton == nextButton)
-							positionPlayedCard(secondPlayerCardPanel, 6);
+						firstPlayer.updateScore(1);
+						goToPrecedentPhase(firstPlayer, 0);
 						break;
-				case 8:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 8:	informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Carolina joue la carte Q de <font color=\"red\">aire 7</font> et "
 						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
-						firstPlayerScoreLabel.setText("Score: " + 10);
-						if (sourceButton == beforeButton)
-							removeLastCard(firstPlayerCardPanel, 7);
-						if (sourceButton == nextButton)
-							positionPlayedCard(firstPlayerCardPanel, 0);
+						firstPlayer.updateScore(1);
+						goToPrecedentPhase(firstPlayer, 7);
 						break;
-				case 9:	informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 9:	informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Carolina rejoue en posant la carte R de <font color=\"red\">aire 7</font> et"
 						+ " <font color=\"red\">périmètre 12</font>.</div></html>");
-						firstPlayerScoreLabel.setText("Score: " + 9);
-						if (sourceButton == beforeButton)
-							removeLastCard(firstPlayerCardPanel, 4);
-						if (sourceButton == nextButton)
-							positionPlayedCard(firstPlayerCardPanel, 7);
+						firstPlayer.updateScore(1);
+						goToPrecedentPhase(firstPlayer, 4);
 						break;
-				case 10: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
+				case 10: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Carolina rejoue en posant la carte X de <font color=\"red\">aire 7</font> et"
 						+ " périmètre 14.</div></html>");
-						firstPlayerScoreLabel.setText("Score: " + 8);
-						if (sourceButton == beforeButton)
-							removeLastCard(secondPlayerCardPanel, 0);
-						if (sourceButton == nextButton)
-							positionPlayedCard(firstPlayerCardPanel, 4);
-						 break;
-				case 11: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 + "Mehdi pose la carte F de <font color=\"red\">aire 7</font> et périmètre 16."
-						 + "</div></html>");
-						 secondPlayerScoreLabel.setText("Score: " + 7);
-						 if (sourceButton == beforeButton)
-							 removeLastCard(firstPlayerCardPanel, 10);
-						 if (sourceButton == nextButton)
-							 positionPlayedCard(secondPlayerCardPanel, 0);
-						 break;
-				case 12: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 + "Carolina pose la carte T de aire 8 et <font color=\"red\">périmètre 16"
-						 + "</font>.</div></html>");
-						 firstPlayerScoreLabel.setText("Score: " + 7);
-						 if (sourceButton == beforeButton)
-							 removeLastCard(secondPlayerCardPanel, 5);
-						 if (sourceButton == nextButton)
-							 positionPlayedCard(firstPlayerCardPanel, 10);
-						 break;
-				case 13: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 + "Mehdi pose la carte M de aire 7 et <font color=\"red\">périmètre 16</font>."
-						 + "</div></html>");
-						 secondPlayerScoreLabel.setText("Score: " + 6);
-						 if (sourceButton == beforeButton) {
-							 firstPlayerPassTurnButton.setForeground(Color.RED);
-							 firstPlayerPassTurnButton.setEnabled(false);
-						 }
-						 if (sourceButton == nextButton)
-							 positionPlayedCard(secondPlayerCardPanel, 5);
-						 break;
-				case 14: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 + "Un joueur qui ne peut pas jouer passe son tour en appuyant le bouton "
-						 + "approprié.<br>Carolina ne peut pas jouer et passe son tour.</div></html>");
-						 firstPlayerPassTurnButton.setEnabled(true);
-						 firstPlayerPassTurnButton.setForeground(Color.RED);
-						 if (sourceButton == beforeButton)
-							 removeLastCard(secondPlayerCardPanel, 3);
-						 break;
-				case 15: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 + "Mehdi pose la carte J de <font color=\"red\">aire 7</font> et "
-						 + "<font color=\"red\">périmètre 16</font>, mais ne peut pas rejouer.</div></html>");
-						 secondPlayerScoreLabel.setText("Score: " + 5);
-						 if (sourceButton == nextButton) {
-							 firstPlayerPassTurnButton.setForeground(Color.RED);
-							 firstPlayerPassTurnButton.setEnabled(false);
-							 positionPlayedCard(secondPlayerCardPanel, 3);
-						 }
-						 break;
-				case 16: informationMessageLabel.setText("<html><div style=\"text-align: center;\">"
-						 + "Carolina ne peut pas jouer, la partie s'achève.<div></html>");
-						 break;
-				case 17: informationMessageLabel.setText("<html><div style=\"text-align: center;\">Chaque joueur compte ses cartes "
-						 + "en fin de partie et marque autant de points qu’il a de cartes.<br> "
-						 + "Dans ce cas, Carolina marque 7 points et Mehdi marque 5 points.</div></html>");
-						 break;
-				case 18: informationMessageLabel.setText("<html><div style=\"text-align: center;\">Au bout de plusieurs parties, le "
-						 + "vainqueur est celui qui totalise le plus petit nombre de points.<br>"
-						 + "</div></html>");
-						 break;
-				case 19: informationMessageLabel.setText("<html><div style=\"text-align: center;\">Fin du tutoriel</div></html>");
+						secondPlayer.updateScore(1);
+						goToPrecedentPhase(secondPlayer, 0);
+						break;
+				case 11: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi pose la carte F de <font color=\"red\">aire 7</font> et périmètre 16."
+						+ "</div></html>");
+						firstPlayer.updateScore(1);
+						goToPrecedentPhase(firstPlayer, 10);
+						break;
+				case 12: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Carolina pose la carte T de aire 8 et <font color=\"red\">périmètre 16"
+						+ "</font>.</div></html>");
+						secondPlayer.updateScore(1);
+						goToPrecedentPhase(secondPlayer, 5);
+						break;
+				case 13: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi pose la carte M de aire 7 et <font color=\"red\">périmètre 16</font>."
+						+ "</div></html>");
+						firstPlayer.setButtonTextColor(Color.RED);
+						break;
+				case 14: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Un joueur qui ne peut pas jouer passe son tour en appuyant le bouton "
+						+ "approprié.<br>Carolina ne peut pas jouer et passe son tour.</div></html>");
+						secondPlayer.updateScore(1);
+						goToPrecedentPhase(secondPlayer, 3);
+						break;
+				case 15: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi pose la carte J de <font color=\"red\">aire 7</font> et "
+						+ "<font color=\"red\">périmètre 16</font>, mais ne peut pas rejouer.</div></html>");
+						break;
+				case 16: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Carolina ne peut pas jouer, la partie s'achève.<div></html>");
+						break;
+				case 17: informationPanel.setMessage("<html><div style=\"text-align: center;\">Chaque joueur compte ses cartes "
+						+ "en fin de partie et marque autant de points qu’il a de cartes.<br> "
+						+ "Dans ce cas, Carolina marque 7 points et Mehdi marque 5 points.</div></html>");
+						break;
+				case 18: informationPanel.setMessage("<html><div style=\"text-align: center;\">Au bout de plusieurs parties, le "
+						+ "vainqueur est celui qui totalise le plus petit nombre de points.<br>"
+						+ "</div></html>");
+						break;
+				case 19: informationPanel.setMessage("<html><div style=\"text-align: center;\">Fin du tutoriel</div></html>");
+						break;
 				default: break;
 			}
 		}
 		
-		private void positionPlayedCard (JPanel playerCardPanel, int cardToMove) {
-			/* Retrieval of the desired card */
-			CardGUI card = (CardGUI)playerCardPanel.getComponent(cardToMove);
-			/* The card on which the event has occurred is made transparent */
-			card.makeTransparent();
-			/* Addition of the card to the panel in which are positioned the played cards */
-			CardGUI playedCard = new CardGUI(card.getId());
-			GridBagConstraints constraints = new GridBagConstraints();
-			constraints.gridx = 3;
-			constraints.gridy = 2;
-			int numberComponents = centralCardPanel.getComponentCount();
-			if (numberComponents >= 1) {
-				int dx = randomInteger(-50, 50);
-				int dy = randomInteger(-50, 50);
-				constraints.insets.left = dx;
-				constraints.insets.top = dy;
-			}
-			centralCardPanel.add(playedCard, constraints, 0);
+		private void goToPrecedentPhase (PlayerPanelGUI playerPanel, int cardToRestore) {
+			playingPanel.removeLastCard();
+			playerPanel.restoreCard(cardToRestore);
 		}
-		
-		private void removeLastCard (JPanel playerCardPanel, int cardToRestore) {
-			CardGUI card = (CardGUI)centralCardPanel.getComponent(0);
-			card.setVisible(false);
-			centralCardPanel.remove(0);
-			CardGUI temp = (CardGUI)playerCardPanel.getComponent(cardToRestore);
-			temp.makeVisible();
-		}
-		
-		private int randomInteger (int min, int max) {
-			Random random = new Random();
-		    int randomNumber = random.nextInt((max - min) + 1) + min;
+	}
+	
+	/* ------------------------------------ Next Button Action Listener -------------------------------- */
+	
+	/**
+	 * Inner class implementing the action listener to be associated to the "Next Button" of the TutorialInformationPanelGUI.
+	 * @author Giovanni De Santis, Rafael Garcia.
+	 */
+	private class NextButtonListener implements ActionListener {
 
-		    return randomNumber;
+		@Override
+		public void actionPerformed (ActionEvent action) {
+			if (tutorialPhase < 19)
+				tutorialPhase++;
+			switch (tutorialPhase) {
+				case 0: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Ce jeu consiste à empiler des cartes par égalités d'aires et de périmètres."
+						+ "<br>Le but est être le premier à se défaire de ses cartes</div></html>");
+						break;
+				case 1: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Toute carte empilée doit représenter une figure de même aire ou de même "
+						+ "périmètre que la figure de la carte du dessous.</div></html>");
+						break;
+				
+				case 2: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Le joueur désigné pour débuter la partie, retire de son jeu la carte de "
+						+ "son choix et la pose sur la table.<br>Le premier joueur est Carolina."
+						+ "</div></html>");
+						break;
+				case 3: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Carolina joue la carte P de aire 5 et périmètre 12.<br> Le joueur "
+						+ "suivant doit poser sur la carte précédente une carte de son jeu.</div></html>");
+						firstPlayer.updateScore(-1);
+						playCard(firstPlayer, 9);
+						break;
+				case 4: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi joue la carte H de <font color=\"red\">aire 5</font> et "
+						+ "<font color=\"red\">périmètre 12</font>.<br>Poser une carte représentant"
+						+ " une figure de même aire et de même périmètre permet de rejouer.</div></html>");
+						secondPlayer.updateScore(-1);
+						playCard(secondPlayer, 7);
+						break;
+				case 5: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi rejoue en posant la carte N de <font color=\"red\">aire 5</font> et "
+						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
+						secondPlayer.updateScore(-1);
+						playCard(secondPlayer, 10);
+						break;
+				case 6:	informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi rejoue en posant la carte B de <font color=\"red\">aire 5</font> et "
+						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
+						secondPlayer.updateScore(-1);
+						playCard(secondPlayer, 8);
+						break;
+				case 7:	informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi rejoue en posant la carte D de aire 7 et <font color=\"red\">périmètre 12"
+						+ "</font>.</div></html>");
+						secondPlayer.updateScore(-1);
+						playCard(secondPlayer, 6);
+						break;
+				case 8:	informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Carolina joue la carte Q de <font color=\"red\">aire 7</font> et "
+						+ "<font color=\"red\">périmètre 12</font>.</div></html>");
+						firstPlayer.updateScore(-1);
+						playCard(firstPlayer, 0);
+						break;
+				case 9:	informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Carolina rejoue en posant la carte R de <font color=\"red\">aire 7</font> et"
+						+ " <font color=\"red\">périmètre 12</font>.</div></html>");
+						firstPlayer.updateScore(-1);
+						playCard(firstPlayer, 7);
+						break;
+				case 10: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Carolina rejoue en posant la carte X de <font color=\"red\">aire 7</font> et"
+						+ " périmètre 14.</div></html>");
+						firstPlayer.updateScore(-1);
+						playCard(firstPlayer, 4);
+						break;
+				case 11: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi pose la carte F de <font color=\"red\">aire 7</font> et périmètre 16."
+						+ "</div></html>");
+						secondPlayer.updateScore(-1);
+						playCard(secondPlayer, 0);
+						break;
+				case 12: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Carolina pose la carte T de aire 8 et <font color=\"red\">périmètre 16"
+						+ "</font>.</div></html>");
+						firstPlayer.updateScore(-1);
+						playCard(firstPlayer, 10);
+						break;
+				case 13: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi pose la carte M de aire 7 et <font color=\"red\">périmètre 16</font>."
+						+ "</div></html>");
+						secondPlayer.updateScore(-1);
+						playCard(secondPlayer, 5);
+						break;
+				case 14: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Un joueur qui ne peut pas jouer passe son tour en appuyant le bouton "
+						+ "approprié.<br>Carolina ne peut pas jouer et passe son tour.</div></html>");
+						firstPlayer.setButtonTextColor(Color.RED);
+						break;
+				case 15: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Mehdi pose la carte J de <font color=\"red\">aire 7</font> et "
+						+ "<font color=\"red\">périmètre 16</font>, mais ne peut pas rejouer.</div></html>");
+						secondPlayer.updateScore(-1);
+						playCard(secondPlayer, 3);
+						break;
+				case 16: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
+						+ "Carolina ne peut pas jouer, la partie s'achève.<div></html>");
+						break;
+				case 17: informationPanel.setMessage("<html><div style=\"text-align: center;\">Chaque joueur compte ses cartes "
+						+ "en fin de partie et marque autant de points qu’il a de cartes.<br> "
+						+ "Dans ce cas, Carolina marque 7 points et Mehdi marque 5 points.</div></html>");
+						break;
+				case 18: informationPanel.setMessage("<html><div style=\"text-align: center;\">Au bout de plusieurs parties, le "
+						+ "vainqueur est celui qui totalise le plus petit nombre de points.<br>"
+						+ "</div></html>");
+						break;
+				case 19: informationPanel.setMessage("<html><div style=\"text-align: center;\">Fin du tutoriel</div></html>");
+						break;
+				default: break;
+			}
+		}
+		
+		private void playCard (PlayerPanelGUI playerPanel, int cardToPlay) {
+			CardGUI card = playerPanel.getCardToPlay(cardToPlay);
+			playingPanel.positionPlayedCard(card);
+			
 		}
 	}
 }

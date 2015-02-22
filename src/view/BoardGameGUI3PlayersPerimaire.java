@@ -1,18 +1,19 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Stack;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.Timer;
 
 import controller.GameController;
 import model.GameState;
+import model.Player;
 
 /**
  * Class that implements the User Interface of the game board in the
@@ -21,243 +22,215 @@ import model.GameState;
  */
 public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 	
-	//TODO Check the handling of the game controller. Static class or not.
-	//	   It is defined in the main menu and in every board game.
-		
 	private static final long serialVersionUID = 1L;
 	private GameController gameController;
-	private JPanel firstPlayerPanel, secondPlayerPanel, thirdPlayerPanel, centralPanel;
-	private JPanel firstPlayerCardPanel, secondPlayerCardPanel, thirdPlayerCardPanel;
-	private JLabel firstPlayerLabel, secondPlayerLabel, thirdPlayerLabel, firstToPlayLabel, notValidMoveLabel;
+	private int stuckGameCondition = 0;
+	private PlayerPanelGUI firstPlayer, secondPlayer, thirdPlayer;
+	private PlayingPanelGUI playingPanel;
 	private Stack<CardGUI> deck;
+	private String[] playersNames;
 	
 	/**
 	 * Class constructor.
 	 */
 	public BoardGameGUI3PlayersPerimaire (GameController gameController, String[] playersNames,
 																String[] shuffledDeck, int firstToPlay) {
-		super();
 		setLayout(new BorderLayout());
 		/* Member Data Initialization */
 		this.gameController = gameController;
-		/* Labels Creation */
-		firstPlayerLabel = new JLabel("Jeu de " + playersNames[0]);
-		secondPlayerLabel = new JLabel("Jeu de " + playersNames[1]);
-		thirdPlayerLabel = new JLabel("Jeu de " + playersNames[2]);
-		firstToPlayLabel = new JLabel();
-		notValidMoveLabel = new JLabel();
+		this.playersNames = playersNames;
 		/* Panels Creation */
-		firstPlayerCardPanel = new JPanel(new GridBagLayout());
-		secondPlayerCardPanel = new JPanel(new GridBagLayout());
-		thirdPlayerCardPanel = new JPanel(new GridBagLayout());
-		firstPlayerPanel = new JPanel();
-		secondPlayerPanel = new JPanel();
-		thirdPlayerPanel = new JPanel();
-		centralPanel = new JPanel(new GridBagLayout());
+		firstPlayer = new PlayerPanelGUI(playersNames[0], 8);
+		secondPlayer = new PlayerPanelGUI(playersNames[1], 8);
+		thirdPlayer = new PlayerPanelGUI(playersNames[2], 8);
+		playingPanel = new PlayingPanelGUI();
 		/* Cards Creation */
 		deck = new Stack<CardGUI>();
-		for (int i = 0; i < GameState.PERIMAIRE_DECK_DIMENSION; i++)
-			deck.push(new CardGUI(shuffledDeck[i]));
+		for (int i = 0; i < GameState.PERIMAIRE_DECK_DIMENSION; i++) {
+			CardGUI card = new CardGUI(shuffledDeck[i]);
+			card.addActionListener(new PlayerCardGUIListener());
+			deck.push(card);
+		}
 		/* Initialization */
-		init(playersNames, firstToPlay);
+		initialize(firstToPlay);
 	}
 	
 	@Override
-	protected void init (String[] playersNames, int firstToPlay) {
-		/* First Player Label Handling */
-		firstPlayerLabel.setPreferredSize(new Dimension(350,20));
-		firstPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* Second Player Label Handling */
-		secondPlayerLabel.setPreferredSize(new Dimension(1000,20));
-		secondPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* Third Player Label Handling */
-		thirdPlayerLabel.setPreferredSize(new Dimension(350,20));
-		thirdPlayerLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* First to Play Label Handling */
-		firstToPlayLabel.setPreferredSize(new Dimension(300, 80));
-		firstToPlayLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* Error Label Handling */
-		notValidMoveLabel.setPreferredSize(new Dimension(300, 80));
-		notValidMoveLabel.setHorizontalAlignment(JLabel.CENTER);
-		/* Player Card Panels Handling */
-		/* This switch is used to handle the initial distribution
-		 * of the cards; it is performed on the basis of the order
-		 * with which the different players have to make a move.
-		 */
+	protected void initialize (int firstToPlay) {
+		/* First Player Panel Handling */
+		firstPlayer.setPreferredSize(new Dimension(350, 390));
+		firstPlayer.setHeaderLabelSize(320, 20);
+		firstPlayer.setCardsPanelSize(350, 320);
+		firstPlayer.setButtonSize(350, 20);
+		firstPlayer.addButtonActionListener(new PassTurnButtonListener());
+		/* Second Player Panel Handling */
+		secondPlayer.setPreferredSize(new Dimension(1000, 280));
+		secondPlayer.setHeaderLabelSize(1000, 20);
+		secondPlayer.setButtonSize(1000, 20);
+		secondPlayer.addButtonActionListener(new PassTurnButtonListener());
+		/* Third Player Panel Handling */
+		thirdPlayer.setPreferredSize(new Dimension(350, 390));
+		thirdPlayer.setHeaderLabelSize(320, 20);
+		thirdPlayer.setCardsPanelSize(350, 320);
+		thirdPlayer.setButtonSize(350, 20);
+		thirdPlayer.addButtonActionListener(new PassTurnButtonListener());
+		/* Playing Panel Handling */
+		playingPanel.setPreferredSize(new Dimension(300, 390));
+		playingPanel.setMessageLabelSize(300, 80);
+		playingPanel.setCardsPanelSize(300, 300);
+		/* Deck's Cards Distribution Handling */		
 		switch (firstToPlay) {
-			case 1: configurePlayerCardPanel(firstPlayerCardPanel);
-					configurePlayerCardPanel(secondPlayerCardPanel);
-					configurePlayerCardPanel(thirdPlayerCardPanel);
-					enablePlayerCardPanel(secondPlayerCardPanel, false);
-					enablePlayerCardPanel(thirdPlayerCardPanel, false);
-					firstToPlayLabel.setText("Le premier joueur sera: " + playersNames[0]);
+			case 1: firstPlayer.configureCardsPanel(3, 3, deck, true, false);
+					secondPlayer.configureCardsPanel(2, 4, deck, false, false);
+					secondPlayer.enable(false);
+					thirdPlayer.configureCardsPanel(3, 3, deck, true, false);
+					thirdPlayer.enable(false);
+					playingPanel.setMessage("Le premier joueur sera: " + playersNames[0]);
 					break;
-			case 2: configurePlayerCardPanel(secondPlayerCardPanel);
-					configurePlayerCardPanel(thirdPlayerCardPanel);
-					configurePlayerCardPanel(firstPlayerCardPanel);
-					enablePlayerCardPanel(thirdPlayerCardPanel, false);
-					enablePlayerCardPanel(firstPlayerCardPanel, false);
-					firstToPlayLabel.setText("Le premier joueur sera: " + playersNames[1]);
+			case 2: secondPlayer.configureCardsPanel(2, 4, deck, false, false);
+					thirdPlayer.configureCardsPanel(3, 3, deck, true, false);
+					thirdPlayer.enable(false);
+					firstPlayer.configureCardsPanel(3, 3, deck, true, false);
+					firstPlayer.enable(false);
+					playingPanel.setMessage("Le premier joueur sera: " + playersNames[1]);
 					break;
-			case 3: configurePlayerCardPanel(thirdPlayerCardPanel);
-					configurePlayerCardPanel(firstPlayerCardPanel);
-					configurePlayerCardPanel(secondPlayerCardPanel);
-					enablePlayerCardPanel(firstPlayerCardPanel, false);
-					enablePlayerCardPanel(secondPlayerCardPanel, false);
-					firstToPlayLabel.setText("Le premier joueur sera: " + playersNames[2]);
+			case 3: thirdPlayer.configureCardsPanel(3, 3, deck, true, false);
+					firstPlayer.configureCardsPanel(3, 3, deck, true, false);
+					firstPlayer.enable(false);
+					secondPlayer.configureCardsPanel(2, 4, deck, false, false);
+					secondPlayer.enable(false);
+					playingPanel.setMessage("Le premier joueur sera: " + playersNames[2]);
 					break;
 			default: break;
-		}		
-		/* First Player Panel Handling */
-		firstPlayerPanel.setPreferredSize(new Dimension(350, 360));
-		firstPlayerPanel.add(firstPlayerLabel);
-		firstPlayerPanel.add(firstPlayerCardPanel);
-		/* Second Player Panel Handling */
-		secondPlayerPanel.setPreferredSize(new Dimension(1000, 255));
-		secondPlayerPanel.add(secondPlayerLabel);
-		secondPlayerPanel.add(secondPlayerCardPanel);
-		/* Third Player Panel Handling */
-		thirdPlayerPanel.setPreferredSize(new Dimension(350, 360));
-		thirdPlayerPanel.add(thirdPlayerLabel);
-		thirdPlayerPanel.add(thirdPlayerCardPanel);
-		/* Center Panel Handling */
-		centralPanel.setPreferredSize(new Dimension(300, 360));
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridx = 0;
-		constraints.gridwidth = 4;
-		centralPanel.add(notValidMoveLabel, constraints, 0);
-		centralPanel.add(firstToPlayLabel);
+		}
 		/* Board Panel Handling */
-		add(firstPlayerPanel, BorderLayout.WEST);
-		add(secondPlayerPanel, BorderLayout.NORTH);
-		add(thirdPlayerPanel, BorderLayout.EAST);
-		add(centralPanel, BorderLayout.CENTER);
+		add(firstPlayer, BorderLayout.WEST);
+		add(secondPlayer, BorderLayout.NORTH);
+		add(thirdPlayer, BorderLayout.EAST);
+		add(playingPanel, BorderLayout.CENTER);
 	}
 	
-	/**
-	 * Configures the generic playerCardPanel, positioning in it the necessary
-	 * cards.
-	 * @param playerCardPanel - the panel in which the cards must be positioned.
-	 */
-	private void configurePlayerCardPanel (JPanel playerCardPanel) {
-		
-		/* Setting the preferred size of the playerCardPanel */
-		if (playerCardPanel == firstPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(325, 325));
-		if (playerCardPanel == secondPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(900, 220));
-		if (playerCardPanel == thirdPlayerCardPanel)
-			playerCardPanel.setPreferredSize(new Dimension(325, 325));
-		/* Positioning of the cards of the deck in the playerCardPanel */
-		CardGUI card = null;
-		GridBagConstraints constraints = new GridBagConstraints();
-		/* firstPlayerCardPanel */
-		if (playerCardPanel == firstPlayerCardPanel) {
-			for (int i = 0; i < 3; i++) {
-				for (int j = 0; j < 3; j++) {
-					if (((i + j) + (i * 2)) != 8) {
-						card = deck.pop();
-						card.addActionListener(new PlayerCardGUIListener());
-						constraints.gridx = j;
-						constraints.gridy = i;
-						constraints.ipadx = 13;
-						constraints.ipady = 10;
-						playerCardPanel.add(card, constraints);
-					}
-				}
-			}
-		}
-		/* secondPlayerCardPanel */
-		if (playerCardPanel == secondPlayerCardPanel) {
-			for (int i = 0; i < 2; i++) {
-				for (int j = 0; j < 4; j++) {
-					card = deck.pop();
-					card.addActionListener(new PlayerCardGUIListener());
-					constraints.gridx = j;
-					constraints.gridy = i;
-					constraints.ipadx = 13;
-					constraints.ipady = 10;
-					playerCardPanel.add(card, constraints);
-				}
-			}
-		}
-		/* thirdPlayerCardPanel */
-		if (playerCardPanel == thirdPlayerCardPanel) {
-			for (int i = 0; i < 3; i++) {
-				for (int j = 0; j < 3; j++) {
-					if (((i + j) + (i * 2)) != 8) {
-						card = deck.pop();
-						card.addActionListener(new PlayerCardGUIListener());
-						constraints.gridx = j;
-						constraints.gridy = i;
-						constraints.ipadx = 13;
-						constraints.ipady = 10;
-						playerCardPanel.add(card, constraints);
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Enable/disable all the CardGUI of a given playerCardPanel.
-	 * @param playerCardPanel - the panel in which the cards must be enabled/disabled.
-	 * @param value - if 'true', the cards are enabled;
-	 * 				  if 'false', the cards are disabled.
-	 */
-	private void enablePlayerCardPanel (JPanel playerCardPanel, boolean value) {
-		int numberOfComponents = playerCardPanel.getComponentCount();
-		for (int i = 0; i < numberOfComponents; i++) {
-			CardGUI card = (CardGUI)playerCardPanel.getComponent(i);
-			card.enableCard(value);
-		}
-	}
-
-    /* ------------------------------------ Player CardGUI Action Listener -------------------------------- */
+	/* ------------------------------------ Player CardGUI Action Listener -------------------------------- */
 	
 	/** Inner class implementing the Action Listener for the CardGUI.
+	  * @author Giovanni De Santis, Rafael Garcia.
 	  */
 	public class PlayerCardGUIListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent action) {
-			/* If present, removal of the firstToPlayLabel from the centralPanel */
-			if (firstToPlayLabel.isShowing()) {
-				firstToPlayLabel.setVisible(false);
-				centralPanel.remove(firstToPlayLabel);
-			}
-			/* If present, removal of the notValidMoveLabel from the centralPanel */
-			if (! notValidMoveLabel.getText().isEmpty())
-				notValidMoveLabel.setText("");
+			/* If present, removal of the text contained in the information message label of the playing panel */
+			if (! playingPanel.isMessageEmpty())
+				playingPanel.setMessage("");
 			/* Handling of the move performed by the generic player */
 			CardGUI playedCard = (CardGUI)action.getSource();
-			String playedCardId = playedCard.getId(); //TODO Repetition in the positioning
-			boolean moveValidity = gameController.handlePlayedCard(playedCardId);
-			/* Not valid move: notify the user that is move is not correct */
-			if (!moveValidity) {
-				notValidMoveLabel.setText("Mouvement pas valable!");
+			boolean moveValidity = gameController.handlePlayedCard(playedCard.getId());
+			Container playerPanel = playedCard.getParent().getParent();
+			/* Not valid move: notify the user that the move is not correct */
+			if (! moveValidity) {
+				playingPanel.setMessage("Mouvement pas valable!");
 			} 
-			/* Valid move: positioning of the played card in the centralPanel */
+			/* Valid move: positioning of the played card in the playing panel */
 			else {
+				stuckGameCondition = 0;
 				playedCard.setEnabled(false);
-				positionPlayedCard(centralPanel, action);
+				playingPanel.positionPlayedCard(playedCard);
 				/* Enabling and disabling of the card panels 
 				 * for the handling of the players' turns
 				 */
-				if (playedCard.getParent() == firstPlayerCardPanel) {
-					enablePlayerCardPanel(firstPlayerCardPanel, false);
-					enablePlayerCardPanel(secondPlayerCardPanel, true);
+				if (playerPanel == firstPlayer) {
+					firstPlayer.updateScore(-1);
+					gameController.updatePlayerScore(playersNames[0], -1);
+					firstPlayer.enable(false);
+					secondPlayer.enable(true);
 				}
-				if (playedCard.getParent() == secondPlayerCardPanel) {
-					enablePlayerCardPanel(secondPlayerCardPanel, false);
-					enablePlayerCardPanel(thirdPlayerCardPanel, true);				
-				}
-				if (playedCard.getParent() == thirdPlayerCardPanel) {
-					enablePlayerCardPanel(thirdPlayerCardPanel, false);
-					enablePlayerCardPanel(firstPlayerCardPanel, true);
+				else if (playerPanel == secondPlayer) {
+					secondPlayer.updateScore(-1);
+					gameController.updatePlayerScore(playersNames[1], -1);
+					secondPlayer.enable(false);
+					thirdPlayer.enable(true);		
+				} else {
+					thirdPlayer.updateScore(-1);
+					gameController.updatePlayerScore(playersNames[2], -1);
+					thirdPlayer.enable(false);
+					firstPlayer.enable(true);
 				}
 			}
 		}
+
+	}
+	
+    /* ------------------------------------ Pass Turn Button Action Listener -------------------------------- */
+
+	/** Inner class implementing the Action Listener for the Pass Turn Button.
+	  * @author Giovanni De Santis, Rafael Garcia.
+	  */
+	public class PassTurnButtonListener implements ActionListener {
+
+		private Timer timer;
+		
+		/**
+		 * Class constructor.
+		 */
+		public PassTurnButtonListener () {
+			timer = new Timer(3000, new TimerListener());
+			timer.setRepeats(false);			
+		}
+		
+		@Override
+		public void actionPerformed (ActionEvent action) {
+			stuckGameCondition++;
+			/* End Game Condition */
+			if (stuckGameCondition == 3) {
+				playingPanel.setMessage("<html><div style=\"text-align: center;\">Aucun joueur peut "
+						+ "faire un mouvement. La partie termine.</div></html>");
+				firstPlayer.enable(false);
+				secondPlayer.enable(false);
+				thirdPlayer.enable(false);
+				timer.start();
+			} else {
+				/* Normal Game Condition - Passing Turns */
+				JButton clickedButton = (JButton)action.getSource();
+				Container buttonContainer = clickedButton.getParent();
+				if (buttonContainer == firstPlayer) {
+					firstPlayer.enable(false);
+					secondPlayer.enable(true);
+				} else if (buttonContainer == secondPlayer) {
+					secondPlayer.enable(false);
+					thirdPlayer.enable(true);
+				} else {
+					thirdPlayer.enable(false);
+					firstPlayer.enable(true);
+				}
+			}
+		}
+		
+	    /* ------------------------------------ Timer Action Listener -------------------------------- */
+		
+		/**
+		 * Inner class implementing the Action Listener to be associated to the timer used in the PassTurnButtonListener.
+		 * @author Giovanni De Santis, Rafael Garcia.
+		 *
+		 */
+		public class TimerListener implements ActionListener {
+			
+			@Override
+			public void actionPerformed (ActionEvent action) {
+				/* Retrieval of the current players' scores. */
+				ArrayList<Player> results = gameController.getResults();
+				/* Print of the match results in the information message label of the playing panel */
+				String rank = "";
+				for (int i = 0; i < results.size(); i++) {
+					Player player = results.get(i);
+					rank = rank.concat("" + (i + 1) + ") " + player.getName() + " - " + player.getScore() + "<br>");
+				}
+				playingPanel.setMessage("<html><div style=\"text-align: center;\">Les résultats de la partie sont:<br>"
+						+ "" + rank + "</div></html>");
+				timer.stop();
+			}
+			
+		}
+	
 	}
 
 }

@@ -45,6 +45,9 @@ public class CardGUI extends JButton {
     	setIcon(null);
     }
 
+    /**
+     * Makes a card visible.
+     */
     public void makeVisible () {
     	ImageIcon imageIcon = new ImageIcon(id + ".png");
     	setIcon(imageIcon);

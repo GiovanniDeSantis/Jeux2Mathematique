@@ -101,4 +101,13 @@ public class PlayingPanelGUI extends JPanel {
 		}
 		cardsPanel.add(playedCard, constraints, 0);
 	}
+	
+	/**
+	 * Removes the last played card from the panel aimed at containing all the played cards.
+	 */
+	public void removeLastCard () {
+		CardGUI card = (CardGUI)cardsPanel.getComponent(0);
+		card.setVisible(false);
+		cardsPanel.remove(0);		
+	}
 }
