@@ -239,7 +239,7 @@ public class MainMenuGUI extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent action) {
-			
+			application.dispose();
 		}
 
 	}

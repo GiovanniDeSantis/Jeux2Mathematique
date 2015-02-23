@@ -54,9 +54,8 @@ public class TutorialGUIPerimaire extends JPanel {
 	protected void initialize () {
 		/* First Player Panel Handling */
 		firstPlayer.setPreferredSize(new Dimension(300, 510));
-		firstPlayer.setButtonSize(115, 20);
-		firstPlayer.setNameLabelSize(120, 20);
-		firstPlayer.setScoreLabelSize(120, 20);
+		firstPlayer.setButtonsPanelSize(300, 30);
+		firstPlayer.setHeaderLabelSize(240, 20);
 		firstPlayer.configureCardsPanel(4, 3, deck, false, false);
 		firstPlayer.enable(false);
 		/* Playing Panel Handling */
@@ -65,9 +64,8 @@ public class TutorialGUIPerimaire extends JPanel {
 		playingPanel.setMessageLabelSize(0, 0);
 		/* Second Player Panel Handling */
 		secondPlayer.setPreferredSize(new Dimension(300, 510));
-		secondPlayer.setButtonSize(115, 20);
-		secondPlayer.setNameLabelSize(120, 20);
-		secondPlayer.setScoreLabelSize(120, 20);
+		secondPlayer.setButtonsPanelSize(300, 30);
+		secondPlayer.setHeaderLabelSize(240, 20);
 		secondPlayer.configureCardsPanel(4, 3, deck, false, false);
 		secondPlayer.enable(false);
 		/* Upper Panel Handling */
@@ -185,7 +183,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 13: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Mehdi pose la carte M de aire 7 et <font color=\"red\">périmètre 16</font>."
 						+ "</div></html>");
-						firstPlayer.setButtonTextColor(Color.RED);
+						firstPlayer.setPassTurnButtonTextColor(Color.RED);
 						break;
 				case 14: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Un joueur qui ne peut pas jouer passe son tour en appuyant le bouton "
@@ -317,7 +315,7 @@ public class TutorialGUIPerimaire extends JPanel {
 				case 14: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Un joueur qui ne peut pas jouer passe son tour en appuyant le bouton "
 						+ "approprié.<br>Carolina ne peut pas jouer et passe son tour.</div></html>");
-						firstPlayer.setButtonTextColor(Color.RED);
+						firstPlayer.setPassTurnButtonTextColor(Color.RED);
 						break;
 				case 15: informationPanel.setMessage("<html><div style=\"text-align: center;\">"
 						+ "Mehdi pose la carte J de <font color=\"red\">aire 7</font> et "

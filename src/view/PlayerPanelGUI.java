@@ -17,7 +17,8 @@ import javax.swing.JPanel;
  * 		- a label containing the name of the player;
  * 		- a label containing the current score of the player during a given match;
  * 		- a panel containing the cards currently held by the player;
- * 		- a button aimed at allow to the player to pass his turn.
+ * 		- a button aimed at allow the player to pass his turn.
+ * 		- a button aimed at allow the player to signal an error committed by the opponent player.
  * @author Giovanni De Santis, Rafael Garcia.
  */
 public class PlayerPanelGUI extends JPanel {
@@ -25,8 +26,8 @@ public class PlayerPanelGUI extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private int playerScore;
 	private JLabel headerLabel;
-	private JPanel cardsPanel;
-	private JButton passTurnButton;
+	private JPanel cardsPanel, buttonsPanel;
+	private JButton passTurnButton, signalErrorButton;
 	private String playerName;
 	
 	/**
@@ -38,10 +39,13 @@ public class PlayerPanelGUI extends JPanel {
 		/* Member Data Initialization */
 		this.playerName = playerName;
 		this.playerScore = playerScore;
+		/* Buttons Creation */
+		passTurnButton = new JButton("Passe Tour");
+		signalErrorButton = new JButton("Signale Erreur");
 		/* User Interface's Components Creation */
 		headerLabel = new JLabel("Jeu de " + playerName + "      Score: " + playerScore);
 		cardsPanel = new JPanel(new GridBagLayout());
-		passTurnButton = new JButton("Passe Tour");
+		buttonsPanel = new JPanel();
 		/* User Interface Initialization */
 		initialize();
 	}
@@ -56,10 +60,19 @@ public class PlayerPanelGUI extends JPanel {
 		passTurnButton.setBorderPainted(false);
 		passTurnButton.setContentAreaFilled(false);
 		passTurnButton.setFocusable(false);
+		passTurnButton.setMultiClickThreshhold(300);
+		/* Signal Error Button Handling */
+		signalErrorButton.setBorderPainted(false);
+		signalErrorButton.setContentAreaFilled(false);
+		signalErrorButton.setFocusable(false);
+		signalErrorButton.setMultiClickThreshhold(300);
+		/* Buttons Panel Handling */
+		buttonsPanel.add(passTurnButton);
+		buttonsPanel.add(signalErrorButton);
 		/* Player Panel Handling */
 		add(headerLabel);
 		add(cardsPanel);
-		add(passTurnButton);
+		add(buttonsPanel);
 	}
 	
 	/**
@@ -77,6 +90,7 @@ public class PlayerPanelGUI extends JPanel {
 		}
 		/* Pass Turn Button Enabling/Disabling */
 		passTurnButton.setEnabled(value);
+		signalErrorButton.setEnabled(value);
 	}
 	
 	/**
@@ -181,28 +195,46 @@ public class PlayerPanelGUI extends JPanel {
 	}
 	
 	/**
-	 * Sets the size of the button allowing the player to pass his turn.
+	 * Sets the size of the panel containing the buttons allowing the player either to pass 
+	 * his turn or to signal an error committed by the opponent player.
 	 * @param width - the width to be assigned to the button.
 	 * @param height - the height to be assigned to the button.
 	 */
-	public void setButtonSize (int width, int height) {
-		passTurnButton.setPreferredSize(new Dimension(width, height));
+	public void setButtonsPanelSize (int width, int height) {
+		buttonsPanel.setPreferredSize(new Dimension(width, height));
 	}
 	
 	/**
 	 * Sets the color of the text characterizing the pass turn button.
 	 * @param color - the color to be set.
 	 */
-	public void setButtonTextColor (Color color) {
+	public void setPassTurnButtonTextColor (Color color) {
 		passTurnButton.setForeground(color);
+	}
+	
+	/**
+	 * Sets the color of the text characterizing the signal error button.
+	 * @param color - the color to be set.
+	 */
+	public void setSignalErrorButtonTextColor (Color color) {
+		signalErrorButton.setForeground(color);
 	}
 	
 	/**
 	 * Associates an Action Listener to the button used to allow the player to pass his turn.
 	 * @param actionListener - the Action Listener to be assigned to the button.
 	 */
-	public void addButtonActionListener (ActionListener actionListener) {
+	public void addPassTurnButtonActionListener (ActionListener actionListener) {
 		passTurnButton.addActionListener(actionListener);
+	}
+	
+	/**
+	 * Associates an Action Listener to the button used to allow the player to signal an error 
+	 * of the opponent player.
+	 * @param actionListener - the Action Listener to be assigned to the button.
+	 */
+	public void addSignalErrorButtonActionListener (ActionListener actionListener) {
+		signalErrorButton.addActionListener(actionListener);
 	}
 
 }

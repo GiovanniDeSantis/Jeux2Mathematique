@@ -22,6 +22,7 @@ import model.Player;
 public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	
 	private static final long serialVersionUID = 1L;
+	private boolean lastMoveValidity;
 	private GameController gameController;
 	private int stuckGameCondition;	
 	private PlayerPanelGUI firstPlayer, secondPlayer;
@@ -37,6 +38,7 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 		/* Member Data Initialization */
 		this.gameController = gameController;
 		this.playersNames = playersNames;
+		lastMoveValidity = true;
 		stuckGameCondition = 0;
 		/* Panels Creation */
 		firstPlayer = new PlayerPanelGUI(playersNames[0], 12);
@@ -56,21 +58,23 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 	@Override
 	protected void initialize (int firstToPlay) {
 		/* First Player Panel Handling */
-		firstPlayer.setPreferredSize(new Dimension(300, 510));
+		firstPlayer.setPreferredSize(new Dimension(300, 530));
 		firstPlayer.setHeaderLabelSize(240, 20);
 		firstPlayer.setCardsPanelSize(300, 450);
-		firstPlayer.setButtonSize(115, 20);
-		firstPlayer.addButtonActionListener(new PassTurnButtonListener());
+		firstPlayer.setButtonsPanelSize(300, 30);
+		firstPlayer.addPassTurnButtonActionListener(new PassTurnButtonListener());
+		firstPlayer.addSignalErrorButtonActionListener(new SignalErrorButtonListener());
 		/* Playing Panel Handling */
-		playingPanel.setPreferredSize(new Dimension(260, 510));
+		playingPanel.setPreferredSize(new Dimension(260, 530));
 		playingPanel.setMessageLabelSize(260, 80);
 		playingPanel.setCardsPanelSize(260, 410);
 		/* Second Player Panel Handling */
-		secondPlayer.setPreferredSize(new Dimension(300, 510));
+		secondPlayer.setPreferredSize(new Dimension(300, 530));
 		secondPlayer.setHeaderLabelSize(240, 20);
 		secondPlayer.setCardsPanelSize(300, 450);
-		secondPlayer.setButtonSize(115, 20);
-		secondPlayer.addButtonActionListener(new PassTurnButtonListener());
+		secondPlayer.setButtonsPanelSize(300, 30);
+		secondPlayer.addPassTurnButtonActionListener(new PassTurnButtonListener());
+		secondPlayer.addSignalErrorButtonActionListener(new SignalErrorButtonListener());
 		/* Deck's Cards Distribution Handling */		
 		switch (firstToPlay) {
 			case 1: firstPlayer.configureCardsPanel(4, 3, deck, false, false);
@@ -103,34 +107,27 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 			/* If present, removal of the text contained in the information message label of the playing panel */
 			if (! playingPanel.isMessageEmpty())
 				playingPanel.setMessage("");
-			/* Handling of the move performed by the generic player */
+			/* Positioning of the played card in the playing panel */
+			stuckGameCondition = 0;
 			CardGUI playedCard = (CardGUI)action.getSource();
-			boolean moveValidity = gameController.handlePlayedCard(playedCard.getId());
+			playedCard.setEnabled(false);
+			lastMoveValidity = gameController.handlePlayedCard(playedCard.getId());
+			playingPanel.positionPlayedCard(playedCard);
+			/* Enabling and disabling of the card panels 
+			 * for the handling of the players' turns
+			 */
 			Container playerPanel = playedCard.getParent().getParent();
-			/* Not valid move: notify the user that the move is not correct */
-			if (! moveValidity) {
-				playingPanel.setMessage("Mouvement pas valable!");
-			} 
-			/* Valid move: positioning of the played card in the playing panel */
+			if (playerPanel == firstPlayer) {
+				firstPlayer.updateScore(-1);
+				gameController.updatePlayerScore(playersNames[0], -1);
+				firstPlayer.enable(false);
+				secondPlayer.enable(true);
+			}
 			else {
-				stuckGameCondition = 0;
-				playedCard.setEnabled(false);
-				playingPanel.positionPlayedCard(playedCard);
-				/* Enabling and disabling of the card panels 
-				 * for the handling of the players' turns
-				 */
-				if (playerPanel == firstPlayer) {
-					firstPlayer.updateScore(-1);
-					gameController.updatePlayerScore(playersNames[0], -1);
-					firstPlayer.enable(false);
-					secondPlayer.enable(true);
-				}
-				else {
-					secondPlayer.updateScore(-1);
-					gameController.updatePlayerScore(playersNames[1], -1);
-					secondPlayer.enable(false);
-					firstPlayer.enable(true);		
-				}
+				secondPlayer.updateScore(-1);
+				gameController.updatePlayerScore(playersNames[1], -1);
+				secondPlayer.enable(false);
+				firstPlayer.enable(true);		
 			}
 		}
 
@@ -166,8 +163,8 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 			} else {
 				/* Normal Game Condition - Passing Turns */
 				JButton clickedButton = (JButton)action.getSource();
-				Container buttonContainer = clickedButton.getParent();
-				if (buttonContainer == firstPlayer) {
+				Container playerPanel = clickedButton.getParent().getParent();
+				if (playerPanel == firstPlayer) {
 					firstPlayer.enable(false);
 					secondPlayer.enable(true);
 				} else {
@@ -203,6 +200,32 @@ public class BoardGameGUI2PlayersPerimaire extends BoardGameGUI {
 			
 		}
 	
+	}
+	
+    /* ------------------------------------ Signal Error Button Action Listener -------------------------------- */
+
+	public class SignalErrorButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed (ActionEvent action) {	
+			JButton clickedButton = (JButton)action.getSource();
+			Container playerPanel = clickedButton.getParent().getParent();
+			if (playerPanel == firstPlayer)
+				playingPanel.setMessage("<html><div style=\"text-align: center;\">" + playersNames[0] + "has signaled an"
+						+ "an error!</div></html>");
+			else 
+				playingPanel.setMessage("<html><div style=\"text-align: center;\">" + playersNames[1] + "has signaled an"
+						+ "an error!</div></html>");
+			
+			if (! lastMoveValidity) {
+				playingPanel.setMessage("<html><div style=\"text-align: center;\">He is right!</div></html>");
+				playingPanel.removeLastCard();
+				
+			} else {
+				playingPanel.setMessage("<html><div style=\"text-align: center;\">He is not right!</div></html>");
+			}
+		}
+		
 	}
 	
 }

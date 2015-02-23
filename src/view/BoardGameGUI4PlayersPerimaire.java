@@ -60,29 +60,29 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 	@Override
 	protected void initialize (int firstToPlay) {
 		/* First Player Panel Handling */
-		firstPlayer.setPreferredSize(new Dimension(370, 290));
+		firstPlayer.setPreferredSize(new Dimension(370, 300));
 		firstPlayer.setHeaderLabelSize(370, 20);
 		firstPlayer.setCardsPanelSize(370, 240);
-		firstPlayer.setButtonSize(370, 20);
-		firstPlayer.addButtonActionListener(new PassTurnButtonListener());
+		firstPlayer.setButtonsPanelSize(370, 30);
+		firstPlayer.addPassTurnButtonActionListener(new PassTurnButtonListener());
 		/* Second Player Panel Handling */
-		secondPlayer.setPreferredSize(new Dimension(1000, 180));
+		secondPlayer.setPreferredSize(new Dimension(1000, 190));
 		secondPlayer.setHeaderLabelSize(1000, 20);
 		secondPlayer.setCardsPanelSize(1000, 120);
-		secondPlayer.setButtonSize(1000, 20);
-		secondPlayer.addButtonActionListener(new PassTurnButtonListener());
+		secondPlayer.setButtonsPanelSize(1000, 30);
+		secondPlayer.addPassTurnButtonActionListener(new PassTurnButtonListener());
 		/* Third Player Panel Handling */
-		thirdPlayer.setPreferredSize(new Dimension(370, 290));
+		thirdPlayer.setPreferredSize(new Dimension(370, 300));
 		thirdPlayer.setHeaderLabelSize(370, 20);
 		thirdPlayer.setCardsPanelSize(370, 240);
-		thirdPlayer.setButtonSize(370, 20);
-		thirdPlayer.addButtonActionListener(new PassTurnButtonListener());
+		thirdPlayer.setButtonsPanelSize(370, 30);
+		thirdPlayer.addPassTurnButtonActionListener(new PassTurnButtonListener());
 		/* Fourth Player Panel Handling */
-		fourthPlayer.setPreferredSize(new Dimension(1000, 180));
+		fourthPlayer.setPreferredSize(new Dimension(1000, 190));
 		fourthPlayer.setHeaderLabelSize(1000, 20);
 		fourthPlayer.setCardsPanelSize(1000, 120);
-		fourthPlayer.setButtonSize(1000, 20);
-		fourthPlayer.addButtonActionListener(new PassTurnButtonListener());
+		fourthPlayer.setButtonsPanelSize(1000, 30);
+		fourthPlayer.addPassTurnButtonActionListener(new PassTurnButtonListener());
 		/* Playing Panel Handling */
 		playingPanel.setPreferredSize(new Dimension(260, 290));
 		playingPanel.setMessageLabelSize(260, 80);
@@ -222,14 +222,14 @@ public class BoardGameGUI4PlayersPerimaire extends BoardGameGUI {
 			} else {
 				/* Normal Game Condition - Passing Turns */
 				JButton clickedButton = (JButton)action.getSource();
-				Container buttonContainer = clickedButton.getParent();
-				if (buttonContainer == firstPlayer) {
+				Container playerPanel = clickedButton.getParent().getParent();
+				if (playerPanel == firstPlayer) {
 					firstPlayer.enable(false);
 					secondPlayer.enable(true);
-				} else if (buttonContainer == secondPlayer) {
+				} else if (playerPanel == secondPlayer) {
 					secondPlayer.enable(false);
 					thirdPlayer.enable(true);
-				} else if (buttonContainer == thirdPlayer) {
+				} else if (playerPanel == thirdPlayer) {
 					thirdPlayer.enable(false);
 					fourthPlayer.enable(true);
 				} else {

@@ -58,24 +58,24 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 	@Override
 	protected void initialize (int firstToPlay) {
 		/* First Player Panel Handling */
-		firstPlayer.setPreferredSize(new Dimension(350, 390));
+		firstPlayer.setPreferredSize(new Dimension(350, 400));
 		firstPlayer.setHeaderLabelSize(320, 20);
 		firstPlayer.setCardsPanelSize(350, 320);
-		firstPlayer.setButtonSize(350, 20);
-		firstPlayer.addButtonActionListener(new PassTurnButtonListener());
+		firstPlayer.setButtonsPanelSize(350, 30);
+		firstPlayer.addPassTurnButtonActionListener(new PassTurnButtonListener());
 		/* Second Player Panel Handling */
-		secondPlayer.setPreferredSize(new Dimension(1000, 280));
+		secondPlayer.setPreferredSize(new Dimension(1000, 290));
 		secondPlayer.setHeaderLabelSize(1000, 20);
-		secondPlayer.setButtonSize(1000, 20);
-		secondPlayer.addButtonActionListener(new PassTurnButtonListener());
+		secondPlayer.setButtonsPanelSize(1000, 30);
+		secondPlayer.addPassTurnButtonActionListener(new PassTurnButtonListener());
 		/* Third Player Panel Handling */
-		thirdPlayer.setPreferredSize(new Dimension(350, 390));
+		thirdPlayer.setPreferredSize(new Dimension(350, 400));
 		thirdPlayer.setHeaderLabelSize(320, 20);
 		thirdPlayer.setCardsPanelSize(350, 320);
-		thirdPlayer.setButtonSize(350, 20);
-		thirdPlayer.addButtonActionListener(new PassTurnButtonListener());
+		thirdPlayer.setButtonsPanelSize(350, 30);
+		thirdPlayer.addPassTurnButtonActionListener(new PassTurnButtonListener());
 		/* Playing Panel Handling */
-		playingPanel.setPreferredSize(new Dimension(300, 390));
+		playingPanel.setPreferredSize(new Dimension(300, 400));
 		playingPanel.setMessageLabelSize(300, 80);
 		playingPanel.setCardsPanelSize(300, 300);
 		/* Deck's Cards Distribution Handling */		
@@ -191,11 +191,11 @@ public class BoardGameGUI3PlayersPerimaire extends BoardGameGUI {
 			} else {
 				/* Normal Game Condition - Passing Turns */
 				JButton clickedButton = (JButton)action.getSource();
-				Container buttonContainer = clickedButton.getParent();
-				if (buttonContainer == firstPlayer) {
+				Container playerPanel = clickedButton.getParent().getParent();
+				if (playerPanel == firstPlayer) {
 					firstPlayer.enable(false);
 					secondPlayer.enable(true);
-				} else if (buttonContainer == secondPlayer) {
+				} else if (playerPanel == secondPlayer) {
 					secondPlayer.enable(false);
 					thirdPlayer.enable(true);
 				} else {
